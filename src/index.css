@@ -1,0 +1,136 @@
+.page-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, .9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1rem;
+  z-index: 9999;
+  opacity: 5;
+  transition: .3s;
+}
+
+.page-loading-content {
+  background: url(img/waiting.gif);
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  background-color: var(--container-color);
+  height: 30px;
+  width: 30px;
+}
+
+/*-- 8. Price-Box ---*/
+
+.price-box {
+  border-radius: 5px;
+  padding: 60px 30px;
+  background-color: #ffffff;
+  text-align: center;
+  -webkit-box-shadow: 0 0 50px 0 rgba(177, 177, 177, 0.2);
+  box-shadow: 0 0 50px 0 rgba(177, 177, 177, 0.2);
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  -webkit-transform: translateY(0);
+  transform: translateY(0)
+}
+
+.price-box:hover {
+  -webkit-transform: translateY(-5px);
+  transform: translateY(-5px);
+  -webkit-box-shadow: 0 5px 50px 0 rgba(177, 177, 177, 0.4);
+  box-shadow: 0 5px 50px 0 rgba(177, 177, 177, 0.4);
+}
+
+.price-box .title {
+  color: #009ff5;
+  margin-bottom: 5px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.price-box .price-rate {
+  color: #1c223a;
+  font-size: 60px;
+  line-height: 1.5em;
+  font-weight: 500;
+}
+
+.price-box .price-time {
+  color: #1c223a;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.price-box .price-content {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  color: #686b75;
+}
+
+.price-box .price-content ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.price-box .price-content ul li {
+  display: block;
+}
+
+.price-box.blue,
+.price-box.purple {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.price-box.blue:hover *,
+.price-box.purple:hover * {
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  color: #ffffff;
+}
+
+.price-box.blue:hover a:hover,
+.price-box.purple:hover a:hover {
+  background-color: #ffffff;
+  color: #21a8e8;
+}
+
+.price-box.blue:hover a,
+.price-box.purple:hover a {
+  border-color: #ffffff;
+}
+
+.price-box.blue:before,
+.price-box.purple:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: #b77cd4;
+  background: linear-gradient(135deg, #b77cd4 0%, #7832e2 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b77cd4', endColorstr='#7832e2', GradientType=1);
+  z-index: -1;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  opacity: 0;
+}
+
+.price-box.blue:before {
+  background: #21a8e8;
+  background: linear-gradient(135deg, #354a97 0%, #21a8e8 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#354a97', endColorstr='#21a8e8', GradientType=1);
+}
+
+.price-box.blue:hover:before,
+.price-box.purple:hover:before {
+  opacity: 1;
+}
