@@ -410,7 +410,7 @@ const logOut = (e) =>{
                       onChange={handleChange}
                       name="phone"
                       value={appData.phone}
-                      placeholder="user id"
+                      placeholder="+263......."
                     />
                     <button style={{ marginTop: "20px" }} className="btn_main">
                       login
