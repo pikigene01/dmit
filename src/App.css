@@ -1,22 +1,10 @@
 :root {
     --header-height: 3rem;
-    /* favourate vue color */
-    --hue-color: 250;
-    /* purple 250 - green - 142 - blue 230 - pink 340 */
-    --first-color: hsl(var(--hue-color), 69%, 61%);
-    --first-color-second: hsl(var(--hue-color), 69%, 61%);
-    /* --first-color-second: rgba(77,181,255,0.4); */
-    --first-color-alt: hsl(var(--hue-color), 57%, 53%);
-    /* --first-color-alt: #2c2c6c; */
-    --first-color-lighter: hsl(var(--hue-color), 92%, 85%);
-    --title-color: hsl(var(--hue-color), 8%, 15%);
-    --text-color: hsl(var(--hue-color), 8%, 45%);
-    --text-color-light: hsl(var(--hue-color), 8%, 65%);
-    --input-color: hsl(var(--hue-color), 70%, 96%);
-    /* --body-color: hsl(var(--hue-color), 60%, 99%); */
+    --first-color: #fff;
+    --first-color-second: #333;
+    --first-color-lighter: #666;
+    --text-color: #888;
     --body-color: rgb(234, 228, 228);
-    /* --body-color: #1f1f38; */
-    --container-color: rgb(234, 228, 228);
     --body-font: 'Poppins', sans-serif;
     --big-font-size: 2rem;
     --h1-font-size: 1.5rem;
@@ -103,6 +91,8 @@
     width: 70%;
     height: 80%;
     background-color: #ccc;
+    border-radius: 10px 0px 0px 5px;
+    padding: 10px;
 }
 .flex_end{
     display: flex;
@@ -117,8 +107,64 @@
     gap: 15px;
 
 }
+.settings{
+    cursor: pointer;
+}
+.settings:hover{
+    transform: scale(1.1);
+    cursor: pointer;
+}
 .sidebar{
     height: 90%;
     width: 100%;
     border-right: 1px solid #333;
+}
+.search_head{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+.search_input{
+    display: flex;
+    width: 60%;
+    justify-content: space-between;
+    padding: 10px;
+    margin: 10px 5px;
+    box-shadow: 2px 5px 15px #000000;
+    border-radius: 10px;
+}
+.search_input input{
+    width: 100%;
+    border: none;
+    background: none;
+}
+.tabs{
+    display: flex;
+    width: 100%;
+    border-bottom: 1px solid var(--first-color-second);
+
+}
+.tab{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 6px 2px;
+    width: 20%;
+    cursor: pointer;
+    margin: 0px 5px;
+    font-size: 10px;
+}
+.tab.active{
+    border-left: 1px solid var(--first-color-second);
+    border-top: 1px solid var(--first-color-second);
+    /* border-right: 1px solid var(--first-color-second); */
+}
+.icon{
+    width: 17px;
+}
+.tab:hover{
+    transform: scale(1.1);
+    cursor: pointer;
 }
