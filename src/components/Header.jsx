@@ -6,7 +6,6 @@ export default function Header() {
    
   return (
     <div>
-         <p>DMit</p>   
 
     </div>
   )
