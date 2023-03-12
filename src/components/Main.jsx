@@ -6,6 +6,10 @@ export default function Main() {
     search: "",
   });
   const [settings,setSettings] = useState(false);
+  const [tabActive,setTabActive] = useState({
+    chats: true,
+    contacts: false
+  });
 
   const handleChange = (e) => {
     setAppData({ ...appData, [e.target.name]: e.target.value });
@@ -25,11 +29,11 @@ export default function Main() {
   var sidebar_main_chat = "";
   sidebar_main_chat = (
     <div className="tabs">
-    <span className="tab active">
+    <span onClick={(e)=>setTabActive({...tabActive,contacts:false,chats:true})} className={tabActive.chats?"tab active":"tab"}>
       <img src={messages_icon_img} className="chats icon" alt="messages" />
       <p>Chats</p>
     </span>
-    <span className="tab">
+    <span onClick={(e)=>setTabActive({...tabActive,contacts:true,chats:false})} className={tabActive.contacts?"tab active":"tab"}>
       <img src={contacts_icon_img} className="contacts icon" alt="contacts" />
       <p>Contacts</p>
 
