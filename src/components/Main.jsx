@@ -357,7 +357,7 @@ const logOut = (e) =>{
         <div>minimize,full</div>
       </div>
       <div className="gridTwo">
-        <div className="sidebar">
+        <div className={selectedChat.chatOpen?"sidebar hide":"sidebar"}>
           <div className="search_head">
             <div className="search_input">
               <input
@@ -421,7 +421,7 @@ const logOut = (e) =>{
             )}
           </div>
         </div>
-        <div className="dm_msgs">
+        <div className={selectedChat.chatOpen?"dm_msgs":"dm_msgs hide"}>
           {selectedChat.chatOpen && (
             <>
               <div className="selected_user">

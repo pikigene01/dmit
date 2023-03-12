@@ -337,3 +337,15 @@ border-radius: 10px 5px 0px 12px;
     margin: 10px 0px;
     cursor: pointer;
 }
+
+@media screen and (max-width:900px) {
+    .sidebar.hide{
+        display: none !important;
+    }
+    .dm_msgs.hide{
+        display: none !important;
+    }
+    .gridTwo{
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
