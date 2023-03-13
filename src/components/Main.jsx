@@ -13,11 +13,12 @@ import useLocalStorageArray from "../services/useLocalStorageArray";
 import swal from "sweetalert";
 import useLocalStorage from "../services/useLocalStorage";
 
-export default function Main() {
+export default function Main({socket}) {
   const [appData, setAppData] = useState({
     search: "",
     phone: "",
   });
+  const [me,setMe] = useState();
   const setRefLast = useCallback((node)=>{
     if(node){
      node.scrollIntoView({smooth:true})
@@ -90,6 +91,13 @@ export default function Main() {
     
     }
    },[selectedChat.chatOpen,selectedChat.name]);
+
+   useEffect(()=>{
+    // if(!user_id) return () => {}
+    socket?.on("me", (id) => setMe(id));
+    socket?.emit('newUser', user_id);
+
+  },[socket,user_id]);
 
    useEffect(()=>{
         if(messages){

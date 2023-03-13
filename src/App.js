@@ -2,8 +2,10 @@ import React,{useState,useEffect} from "react";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import axios from "axios";
-import { apihost, getDataSites } from "./services/api";
+import { apihost, getDataSites, sockethost } from "./services/api";
 import WholeApp from "./components/WholeApp";
+import { io } from "socket.io-client";
+
 
 
 axios.defaults.baseURL = apihost;
@@ -22,12 +24,29 @@ axios.interceptors.request.use(function (config) {
 
 function App() {
  const [appToView,setAppToView] = useState();
+ const [socket,setSocket] = useState();
+
+ useEffect(()=>{
+  try{
+    const newSocket = io(sockethost);
+    setSocket(newSocket);
+    return ()=>{
+      newSocket?.close();
+      
+    }
+  }catch(err){
+  return () => {
+    
+  }
+  }
+ 
+},[]);
 
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={<WholeApp appToView={appToView} />}/>
-        <Route exact path="*" element={<WholeApp appToView={appToView}/>}/>
+        <Route exact path="/" element={<WholeApp appToView={appToView} socket={socket} />}/>
+        <Route exact path="*" element={<WholeApp appToView={appToView} socket={socket}/>}/>
        </Routes>
     </Router>
   );
