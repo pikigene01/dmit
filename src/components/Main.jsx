@@ -115,6 +115,18 @@ export default function Main({socket}) {
         socket?.off('getMessage');
      }
   },[socket]);
+  useEffect(()=>{
+     
+     socket?.on('getProfiles', (data)=>{
+        setProfileImgs((prevData)=>{
+            return [...prevData, data];
+        });
+     });
+
+     return ()=>{
+        socket?.off('getProfiles');
+     }
+  },[socket]);
 
   useEffect(()=>{
     onlineUsers.forEach((user)=>{
