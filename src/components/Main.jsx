@@ -31,6 +31,7 @@ export default function Main({socket}) {
   const [settings, setSettings] = useLocalStorage("settings");
   const [user_id, setUser_id] = useLocalStorage("user_id");
   const [onlineUsers,setOnlineUsers] = useState([]);
+  const [darkMode,setDarkMode] = useLocalStorage('theme_data');
   const [profileImgs,setProfileImgs] = useState([]);//we push user id and url for the image
   const [tabActive, setTabActive] = useState({
     chats: true,
@@ -93,6 +94,13 @@ export default function Main({socket}) {
     
     }
    },[selectedChat.chatOpen,selectedChat.name,messages]);
+   useEffect(()=>{
+    if(darkMode){
+        document.body.classList.add('dark-mode');
+    }else{
+        document.body.classList.remove('dark-mode');
+    }
+   },[darkMode]);
 
    useEffect(()=>{
     // if(!user_id) return () => {}
@@ -130,7 +138,7 @@ export default function Main({socket}) {
 
   useEffect(()=>{
     onlineUsers.forEach((user)=>{
-        const users = document.querySelectorAll('.user_'+user?.username.replace('+',"_").toLowerCase());
+        const users = document.querySelectorAll('.user_'+user?.username?.replace('+',"_").toLowerCase());
         const status = document.querySelectorAll('.status');
         status.forEach((status)=>{
             status.innerHTML = "";
@@ -142,33 +150,36 @@ export default function Main({socket}) {
   },[onlineUsers, selectedChat.msgs]);
    useEffect(()=>{
         if(messages){
-
-            let dataFind = [];
-            let dataFindarray = [];
-            let msg_user_from = "";
-    
             messages.map((msgmap)=>{
-                msg_user_from = msgmap?.from;
-                dataFind.push(msgmap);
-              var getFind = chatsLists.find((chat)=>{
+                
+              var contact = contacts?.find((chat)=>{
                 return chat.phone === msgmap.from
-             });
-             if(!user_id === msgmap.from){
-             if(getFind === undefined){
-                dataFindarray.push({phone:dataFind?.from,name: '',msgs: []});
-                let new_array = dataFind.filter((contact) => contact.from !== getFind?.phone);
-                dataFind = new_array;//l did filter data to remove added messages
-             }
+             });//we check each message if got save name
+
+             var name = (contact && contact.name) || msgmap?.from;
+             var phone = msgmap?.from;
+             var combinedContact = {phone,name,msgs: []};
+
+             const check_chatlist = chatsLists?.find((chat)=>{
+              return chat?.phone === msgmap?.from
+             })
+             const checkUserId = (user_id === msgmap?.from);
+            if(!checkUserId){
+            if(check_chatlist === undefined){
+                setChatsLists((prevData)=>{
+                  return [...prevData, combinedContact];
+                  });
             }
+          }//my own msg dont add to chatlist
+            
             });
-            if(!user_id == msg_user_from){
-               setChatsLists((prevData)=>{
-               return [...prevData, dataFindarray];
-               });
-            }
+
+ // document.querySelectorAll(".chatslist_"+msgmap?.from?.replace('+',"_").toLowerCase())[0]?.classList.add('is-hidden');
+            
+              
             //set chatList if received messages
         }
-   },[messages]);
+   },[messages,chatsLists]);
   const addToChat = (contact) => {
     //add chat to side bar
     let combinedData = { name: contact.name, phone: contact.phone, msgs: [] };
@@ -237,11 +248,13 @@ const logOut = (e) =>{
       <div className="profile_wrapper">
       <img
                       src={employees_icon_img}
-                      className={"user user_"+user_id.replace('+',"_").toLowerCase()}
+                      className={"user user_"+user_id?.replace('+',"_").toLowerCase()}
                       alt="profile_pic"
                     />
       <span>{user_id}</span>
       <span className="btn_main" onClick={logOut}>logout</span>
+      <span style={{margin:"10px"}} className="btn_main">Export Data</span>
+      <span style={{margin:"10px"}} onClick={()=>setDarkMode(!darkMode)} className="btn_main">Mode ({darkMode?"dark":"light"})</span>
       </div>
     </>
   );
@@ -253,18 +266,55 @@ const logOut = (e) =>{
   };
   const sendMessage = (e) => {
     e.preventDefault();
-
-    let msgData = {msg:userMessage,to:selectedChat?.phone,from:user_id,type: 'msg'};
+    let msgData = {}
+      var now = new Date();
+      var hour = now.getHours();
+     var minutes = now.getMinutes();
+     msgData =  {msg:userMessage,to:selectedChat?.phone,from:user_id,type: 'msg',status:'send',time: `${hour}:${minutes}`,now};
+     
+    let response = socket?.emit('sendMessageUser', msgData);
+    if(response.connected){
+        msgData = {msg:userMessage,to:selectedChat?.phone,from:user_id,type: 'msg',status:'send',
+        time: `${hour}:${minutes}`,now};
+    }else{
+      msgData =  {msg:userMessage,to:selectedChat?.phone,from:user_id,type: 'msg',status:'error',time: `${hour}:${minutes}`,now};
+    }
     setMessages((prevData)=>{
         return [...prevData, msgData];
     });
+    
 
     setSelectedChat({
             ...selectedChat, 
         name:selectedChat.name,phone:selectedChat.phone,chatOpen:true,msgs:[...selectedChat.msgs,msgData]});
-    socket?.emit('sendMessageUser', msgData);
+       
         setUserMessage('');
   };
+
+
+
+  const resendMsg = (msg)=>{
+     if(msg?.status == "send") return ()=>{}
+    let response = socket?.emit('sendMessageUser', msg);
+    let msgsetValues = document.querySelectorAll('.msg_'+msg?.time?.replace(':',"_").toLowerCase());
+
+    if(response?.connected){
+        msgsetValues.forEach((msg)=>{
+            msg.innerHTML = "send";
+        });
+        let msg_update = {msg:msg?.msg,to:msg?.to,from:user_id,type: 'msg',status:'send',time: msg?.time,now:msg?.now};
+        let new_array = messages.filter((msg_get) => msg_get.now !== msg?.now);
+        setMessages(new_array);
+        setMessages((prevData)=>{
+            return [...prevData, msg_update];
+        })
+
+    }else{
+        msgsetValues.forEach((msg)=>{
+            msg.innerHTML = "resend";
+        })
+    }
+  }
   var sidebar_main_chat = "";
   sidebar_main_chat = (
     <div className="tabs">
@@ -298,14 +348,14 @@ const logOut = (e) =>{
             <>
               <div className="contact_wrapper data_tosearch">
                 <div
-                  className="contact"
+                  className={"contact chatslist_"+contact?.phone?.replace('+',"_").toLowerCase()}
                   key={index}
                   onClick={(e) => selectThisChat(contact)}
                   title="add this to conversation"
                 >
                   <img
                     src={employees_icon_img}
-                    className={"user user_"+contact?.phone.replace('+',"_").toLowerCase()}
+                    className={"user user_"+contact?.phone?.replace('+',"_").toLowerCase()}
                     alt="profile_pic"
                   />
                   <span className="contact_details">
@@ -371,7 +421,7 @@ const logOut = (e) =>{
                   >
                     <img
                       src={employees_icon_img}
-                      className={"user user_"+contact?.phone.replace('+',"_").toLowerCase()}
+                      className={"user user_"+contact?.phone?.replace('+',"_").toLowerCase()}
                       alt="profile_pic"
                     />
                     <span className="contact_details">
@@ -488,7 +538,7 @@ const logOut = (e) =>{
                 />
                 <div className="user_status">
                   <h3>{selectedChat.name}</h3>
-                  <span className={"status user_"+selectedChat?.phone.replace('+',"_").toLowerCase()}>last seen: 1min ago</span>
+                  <span className={"status user_"+selectedChat?.phone?.replace('+',"_").toLowerCase()}>last seen: 1min ago</span>
                 </div>
               </div>
               <div className="selected_msgs">
@@ -498,7 +548,9 @@ const logOut = (e) =>{
                     return (
                         <>
                        <div ref={lastMessage?setRefLast:null} className={msg.from == user_id?"msgs_wrapper fromMe data_tosearch":"msgs_wrapper data_tosearch"}>
-                        <span key={index} className={msg.from == user_id?"msg fromMeMsg":"msg fromOther"}>{msg.msg}</span>
+                        <span key={index} className={msg.from == user_id?"msg fromMeMsg":"msg fromOther"}>{msg.msg} </span>
+                        <span>{msg.time}</span>
+                        <span className={"btn_main msg_"+msg?.time?.replace(':',"_").toLowerCase()} onClick={()=>resendMsg(msg)}>{msg.status == "error"?"resend":"send"}</span>
                         </div>
                         </>
                     )

@@ -54,15 +54,20 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   
   }
+  .dark-mode{
+    /* change roots colors */
+    --first-color: #fff;
+    --first-color-second: #160a0a;
+    --first-color-lighter: #0e0c0c;
+    --text-color: #f2efef;
+    --body-color: rgb(16, 14, 14);
+  }
   
   /*  */
   body {
    background: var(--body-color);
   }
-  body.dark-mode{
-    /* change roots colors */
-  
-  }
+
   .skeleton{
     opacity: .7;
     animation: skeleton-loading 1s linear infinite alternate;
