@@ -30,6 +30,8 @@ export default function Main({socket}) {
   const [chatsLists, setChatsLists] = useLocalStorageArray("chatslist");
   const [settings, setSettings] = useLocalStorage("settings");
   const [user_id, setUser_id] = useLocalStorage("user_id");
+  const [onlineUsers,setOnlineUsers] = useState([]);
+  const [profileImgs,setProfileImgs] = useState([]);//we push user id and url for the image
   const [tabActive, setTabActive] = useState({
     chats: true,
     contacts: false,
@@ -90,7 +92,7 @@ export default function Main({socket}) {
         name:selectedChat.name,phone:selectedChat.phone,chatOpen:true,msgs:dataFindarray});
     
     }
-   },[selectedChat.chatOpen,selectedChat.name]);
+   },[selectedChat.chatOpen,selectedChat.name,messages]);
 
    useEffect(()=>{
     // if(!user_id) return () => {}
@@ -99,6 +101,33 @@ export default function Main({socket}) {
 
   },[socket,user_id]);
 
+  useEffect(()=>{
+     socket?.on('online_users', (data)=>{
+        setOnlineUsers(data);
+     });
+     socket?.on('getMessage', (data)=>{
+        setMessages((prevData)=>{
+            return [...prevData, data];
+        });
+     });
+
+     return ()=>{
+        socket?.off('getMessage');
+     }
+  },[socket]);
+
+  useEffect(()=>{
+    onlineUsers.forEach((user)=>{
+        const users = document.querySelectorAll('.user_'+user?.username.replace('+',"_").toLowerCase());
+        const status = document.querySelectorAll('.status');
+        status.forEach((status)=>{
+            status.innerHTML = "";
+        })
+        users.forEach((user)=>{
+            user.innerHTML = "online";
+        });
+    });
+  },[onlineUsers, selectedChat.msgs]);
    useEffect(()=>{
         if(messages){
 
@@ -196,7 +225,7 @@ const logOut = (e) =>{
       <div className="profile_wrapper">
       <img
                       src={employees_icon_img}
-                      className="user"
+                      className={"user user_"+user_id.replace('+',"_").toLowerCase()}
                       alt="profile_pic"
                     />
       <span>{user_id}</span>
@@ -221,7 +250,7 @@ const logOut = (e) =>{
     setSelectedChat({
             ...selectedChat, 
         name:selectedChat.name,phone:selectedChat.phone,chatOpen:true,msgs:[...selectedChat.msgs,msgData]});
-
+    socket?.emit('sendMessageUser', msgData);
         setUserMessage('');
   };
   var sidebar_main_chat = "";
@@ -264,7 +293,7 @@ const logOut = (e) =>{
                 >
                   <img
                     src={employees_icon_img}
-                    className="user"
+                    className={"user user_"+contact?.phone.replace('+',"_").toLowerCase()}
                     alt="profile_pic"
                   />
                   <span className="contact_details">
@@ -330,7 +359,7 @@ const logOut = (e) =>{
                   >
                     <img
                       src={employees_icon_img}
-                      className="user"
+                      className={"user user_"+contact?.phone.replace('+',"_").toLowerCase()}
                       alt="profile_pic"
                     />
                     <span className="contact_details">
@@ -447,7 +476,7 @@ const logOut = (e) =>{
                 />
                 <div className="user_status">
                   <h3>{selectedChat.name}</h3>
-                  <span>last seen: 1min ago</span>
+                  <span className={"status user_"+selectedChat?.phone.replace('+',"_").toLowerCase()}>last seen: 1min ago</span>
                 </div>
               </div>
               <div className="selected_msgs">
@@ -456,8 +485,8 @@ const logOut = (e) =>{
 
                     return (
                         <>
-                       <div ref={lastMessage?setRefLast:null} className={msg.to == user_id || msg.from == user_id?"msgs_wrapper fromMe data_tosearch":"msgs_wrapper data_tosearch"}>
-                        <span key={index} className={msg.to == user_id || msg.from == user_id?"msg fromMeMsg":"msg fromOther"}>{msg.msg}</span>
+                       <div ref={lastMessage?setRefLast:null} className={msg.from == user_id?"msgs_wrapper fromMe data_tosearch":"msgs_wrapper data_tosearch"}>
+                        <span key={index} className={msg.from == user_id?"msg fromMeMsg":"msg fromOther"}>{msg.msg}</span>
                         </div>
                         </>
                     )
