@@ -12,6 +12,7 @@ import {
 import useLocalStorageArray from "../services/useLocalStorageArray";
 import swal from "sweetalert";
 import useLocalStorage from "../services/useLocalStorage";
+import { getAppTimeAgo } from "../services/timeago";
 
 export default function Main({socket}) {
   const [appData, setAppData] = useState({
@@ -19,6 +20,7 @@ export default function Main({socket}) {
     phone: "",
   });
   const [me,setMe] = useState();
+  const [fullScreen,setFullScreen] = useState(false);
   const setRefLast = useCallback((node)=>{
     if(node){
      node.scrollIntoView({smooth:true})
@@ -57,6 +59,7 @@ export default function Main({socket}) {
   };
   const addContactFunction = async (name, phone) => {
     if (!name || !phone) return () => {};
+    if(contacts.some((user) => user.phone === phone)) return ()=> {}
     if (!phone.includes("+")) {
       swal("Warning", "phone must include +", "warning");
       return () => {};
@@ -138,7 +141,25 @@ export default function Main({socket}) {
   useEffect(()=>{
     if(!socket) return ()=>{}
       socket?.emit('get_online_users', {});
-  },[socket, selectedChat?.phone])
+  },[socket, selectedChat?.phone]);
+
+  useEffect(()=>{
+const main_app_wrappers = document.querySelectorAll('.main_app');
+
+ main_app_wrappers.forEach((main_app)=>{
+  if(fullScreen){
+   main_app.requestFullscreen();
+
+  }else{
+    document.exitFullscreen();
+  }
+  main_app.addEventListener('contextmenu',(e)=>{
+    e.preventDefault();
+  });
+ });
+   
+
+  },[fullScreen])
 
   useEffect(()=>{
     onlineUsers.forEach((user)=>{
@@ -195,6 +216,7 @@ export default function Main({socket}) {
         }
    },[messages,chatsLists]);
   const addToChat = (contact) => {
+    if(chatsLists.some((user) => user.phone === contact?.phone)) return ()=> {}
     //add chat to side bar
     let combinedData = { name: contact.name, phone: contact.phone, msgs: [] };
     setChatsLists((prevData) => {
@@ -205,7 +227,7 @@ export default function Main({socket}) {
 
   const selectThisChat = (contact) => {
     //set selected conversation to true and array of messages
-
+  if(selectedChat?.phone == contact?.phone) return () => {}
     setSelectedChat({
       ...selectedChat,
       chatOpen: true,
@@ -470,7 +492,7 @@ const logOut = (e) =>{
     <div className="main_app">
       <div className="flex_end">
         <div>Direct Message</div>
-        <div>minimize,full</div>
+        <div className="flex"><span onClick={()=>setFullScreen(true)} className="fullmode icon"></span><span onClick={()=>setFullScreen(false)} className="minimize icon"></span></div>
       </div>
       <div className="gridTwo">
         <div className={selectedChat.chatOpen?"sidebar hide":"sidebar"}>
@@ -566,8 +588,9 @@ const logOut = (e) =>{
                         <>
                        <div ref={lastMessage?setRefLast:null} className={msg.from == user_id?"msgs_wrapper fromMe data_tosearch":"msgs_wrapper data_tosearch"}>
                         <span key={index} className={msg.from == user_id?"msg fromMeMsg":"msg fromOther"}>{msg.msg} </span>
-                        <span>{msg.time}</span>
-                        <span className={"btn_main msg_"+msg?.time?.replace(':',"_").toLowerCase()} onClick={()=>resendMsg(msg)}>{msg.status == "error"?"resend":"send"}</span>
+                        <span>{getAppTimeAgo(msg?.now)}</span>
+                        {/* <span>{msg.time}</span> */}
+                        <span style={{color: '#fff'}} className={"msg_"+msg?.time?.replace(':',"_").toLowerCase()} onClick={()=>resendMsg(msg)}>{msg.status == "error"?"resend":"send"}</span>
                         </div>
                         </>
                     )
