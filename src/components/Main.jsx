@@ -33,6 +33,7 @@ export default function Main({socket}) {
   const [settings, setSettings] = useLocalStorage("settings");
   const [user_id, setUser_id] = useLocalStorage("user_id");
   const [onlineUsers,setOnlineUsers] = useState([]);
+  const [lastSeens,setLastSeens] = useState([]);
   const [darkMode,setDarkMode] = useLocalStorage('theme_data');
   const [profileImgs,setProfileImgs] = useState([]);//we push user id and url for the image
   const [tabActive, setTabActive] = useState({
@@ -124,6 +125,29 @@ export default function Main({socket}) {
 
      return ()=>{
         socket?.off('getMessage');
+     }
+  },[socket]);
+  useEffect(()=>{
+    if(!lastSeens) return ()=>{}
+    console.log(lastSeens);
+     lastSeens.map((seen)=>{
+      const users = document.querySelectorAll('.status_'+seen?.phone?.replace('+',"_").toLowerCase());
+     const status_span = document.querySelectorAll('.status_span');
+     status_span.forEach((span)=>{
+      span.innerHTML = "";
+     })
+      users.forEach((user)=>{
+          user.innerHTML = `Last Seen: ${getAppTimeAgo(seen?.now)}`;
+      });
+     })
+  },[lastSeens,selectedChat?.phone]);
+  useEffect(()=>{
+     socket?.on('last_seens', (data)=>{
+        setLastSeens(data);
+     });
+
+     return ()=>{
+        socket?.off('last_seens');
      }
   },[socket]);
   useEffect(()=>{
@@ -578,6 +602,7 @@ const logOut = (e) =>{
                 <div className="user_status">
                   <h3>{selectedChat.name}</h3>
                   <span className={"status user_"+selectedChat?.phone?.replace('+',"_").toLowerCase()}>last seen: 1min ago</span>
+                  <span className={"status_span status_"+selectedChat?.phone?.replace('+',"_").toLowerCase()}></span>
                 </div>
               </div>
               <div className="selected_msgs">
