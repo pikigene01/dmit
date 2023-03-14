@@ -181,14 +181,11 @@ export default function Main({socket}) {
               return chat?.phone === msgmap?.from
              })
       
-             const checkUserId = (user_id === msgmap?.from);
-            // if(!checkUserId){
             if(check_chatlist === undefined){
                 setChatsLists((prevData)=>{
                   return [...prevData, combinedContact];
                   });
            }
-       //  }//my own msg dont add to chatlist
           
             });
  // document.querySelectorAll(".chatslist_"+msgmap?.from?.replace('+',"_").toLowerCase())[0]?.classList.add('is-hidden');
