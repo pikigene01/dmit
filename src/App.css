@@ -94,8 +94,8 @@
     flex-direction: column;
 }
 .main_app{
-    width: 70%;
-    height: 80%;
+    width: 70vw;
+    height: 90vh;
     background-color: #ccc;
     border-radius: 10px 0px 0px 5px;
     padding: 10px;

@@ -124,7 +124,7 @@ export default function Main({socket}) {
      }
   },[socket]);
   useEffect(()=>{
-     
+    if(!socket) return ()=>{}
      socket?.on('getProfiles', (data)=>{
         setProfileImgs((prevData)=>{
             return [...prevData, data];
@@ -135,6 +135,10 @@ export default function Main({socket}) {
         socket?.off('getProfiles');
      }
   },[socket]);
+  useEffect(()=>{
+    if(!socket) return ()=>{}
+      socket?.emit('get_online_users', {});
+  },[socket, selectedChat?.phone])
 
   useEffect(()=>{
     onlineUsers.forEach((user)=>{
@@ -149,12 +153,25 @@ export default function Main({socket}) {
     });
   },[onlineUsers, selectedChat.msgs]);
    useEffect(()=>{
+    let filterMsgs = messages,
+              getContact = [];
         if(messages){
             messages.map((msgmap)=>{
-                
-              var contact = contacts?.find((chat)=>{
-                return chat.phone === msgmap.from
-             });//we check each message if got save name
+              
+           var getOneUser =  filterMsgs?.find((user)=>{
+            return user.from === msgmap.from;
+           });
+           !getContact.some((user) => user.from === getOneUser?.from) && getContact.push(getOneUser);
+           let newcreateMsgs = filterMsgs.filter((data)=> data.from !== msgmap.from );
+            
+            });
+
+            getContact?.map((msgmap)=>{
+              //this functuion really helps me to not jublicate chat lists
+              //since we filtered the pushed item in getContacts as array of find and filter the rest
+           var contact = contacts?.find((chat)=>{
+            return chat.phone === msgmap.from
+         });//we check each message if got save name
 
              var name = (contact && contact.name) || msgmap?.from;
              var phone = msgmap?.from;
@@ -163,17 +180,17 @@ export default function Main({socket}) {
              const check_chatlist = chatsLists?.find((chat)=>{
               return chat?.phone === msgmap?.from
              })
+      
              const checkUserId = (user_id === msgmap?.from);
-            if(!checkUserId){
+            // if(!checkUserId){
             if(check_chatlist === undefined){
                 setChatsLists((prevData)=>{
                   return [...prevData, combinedContact];
                   });
-            }
-          }//my own msg dont add to chatlist
-            
+           }
+       //  }//my own msg dont add to chatlist
+          
             });
-
  // document.querySelectorAll(".chatslist_"+msgmap?.from?.replace('+',"_").toLowerCase())[0]?.classList.add('is-hidden');
             
               
@@ -246,11 +263,14 @@ const logOut = (e) =>{
   sidebar_main_profile = (
     <>
       <div className="profile_wrapper">
-      <img
+        {user_id && (
+          <img
                       src={employees_icon_img}
-                      className={"user user_"+user_id?.replace('+',"_").toLowerCase()}
+                      className={"user user_"+user_id?user_id?.replace('+',"_").toLowerCase():null}
                       alt="profile_pic"
                     />
+        )}
+      
       <span>{user_id}</span>
       <span className="btn_main" onClick={logOut}>logout</span>
       <span style={{margin:"10px"}} className="btn_main">Export Data</span>
