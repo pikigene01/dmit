@@ -365,6 +365,9 @@ border-radius: 10px 5px 0px 12px;
     margin-left: 10px;
     background: var(--text-color);
 }
+input[value]{
+    color: var(--text-color);
+}
 @media screen and (max-width:900px) {
     .sidebar.hide{
         display: none !important;

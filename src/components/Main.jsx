@@ -199,10 +199,22 @@ const main_app_wrappers = document.querySelectorAll('.main_app');
     });
   },[onlineUsers, selectedChat.msgs]);
    useEffect(()=>{
+    
     let filterMsgs = messages,
               getContact = [];
         if(messages){
             messages.map((msgmap)=>{
+              chatsLists.map((chat)=>{
+                if(chat.name === msgmap.from){
+                  let check_contact = contacts.find((contact)=> {
+                  return  contact.phone === chat.name
+                });
+                  if(check_contact){
+                    removeChatsList(msgmap.from);//remove chatlist when contact is saved and reload 
+                    //get name from saved contacts
+                  }
+                }
+              })
               
            var getOneUser =  filterMsgs?.find((user)=>{
             return user.from === msgmap.from;
@@ -239,7 +251,7 @@ const main_app_wrappers = document.querySelectorAll('.main_app');
               
             //set chatList if received messages
         }
-   },[messages,chatsLists]);
+   },[messages,chatsLists,contacts]);
   const addToChat = (contact) => {
     if(chatsLists.some((user) => user.phone === contact?.phone)) return ()=> {}
     //add chat to side bar
@@ -315,7 +327,7 @@ const logOut = (e) =>{
                     />
         )}
       
-      <span>{user_id}</span>
+      <span>{user_id?.substr(0,10)}</span>
       <span className="btn_main" onClick={logOut}>logout</span>
       <span style={{margin:"10px"}} className="btn_main">Export Data</span>
       <span style={{margin:"10px"}} onClick={()=>setDarkMode(!darkMode)} className="btn_main">Mode ({darkMode?"dark":"light"})</span>
@@ -423,8 +435,8 @@ const logOut = (e) =>{
                     alt="profile_pic"
                   />
                   <span className="contact_details">
-                    <h3>{contact?.name}</h3>
-                    <p>{contact.phone}</p>
+                    <h3>{contact?.name?.substr(0,10)}</h3>
+                    <p>{contact.phone?.substr(0,17)}</p>
                   </span>
                 </div>
                 <div className="contact_option">
@@ -489,8 +501,8 @@ const logOut = (e) =>{
                       alt="profile_pic"
                     />
                     <span className="contact_details">
-                      <h3>{contact.name}</h3>
-                      <p>{contact.phone}</p>
+                      <h3>{contact.name?.substr(0,10)}</h3>
+                      <p>{contact.phone?.substr(0,17)}</p>
                     </span>
                   </div>
                   <div className="contact_option">
@@ -601,7 +613,7 @@ const logOut = (e) =>{
                   alt="profile_pic"
                 />
                 <div className="user_status">
-                  <h3>{selectedChat.name}</h3>
+                  <h3>{selectedChat.name.substr(0,19)}</h3>
                   <span className={"user_"+selectedChat?.phone?.replace('+',"_").toLowerCase() + " status"}>last seen: 1min ago</span>
                   <span className={"status_span status_"+selectedChat?.phone?.replace('+',"_").toLowerCase()}></span>
                 </div>
