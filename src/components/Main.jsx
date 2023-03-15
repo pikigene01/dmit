@@ -540,7 +540,7 @@ const logOut = (e) =>{
       <audio style={{"display":"none"}} id="notification_audio" className="notification_audio" src={notification_music} />
     <div className="main_app">
       <div className="flex_end">
-        <div>Direct Message</div>
+        <div>Gene Piki</div>
         <div className="flex"><span onClick={()=>setFullScreen(true)} className="fullmode icon"></span><span onClick={()=>setFullScreen(false)} className="minimize icon"></span></div>
       </div>
       <div className="gridTwo">
