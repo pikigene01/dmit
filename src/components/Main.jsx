@@ -13,6 +13,8 @@ import useLocalStorageArray from "../services/useLocalStorageArray";
 import swal from "sweetalert";
 import useLocalStorage from "../services/useLocalStorage";
 import { getAppTimeAgo } from "../services/timeago";
+import notification_music from '../audios/notification.mp3';
+
 
 export default function Main({socket}) {
   const [appData, setAppData] = useState({
@@ -122,6 +124,7 @@ export default function Main({socket}) {
         setMessages((prevData)=>{
             return [...prevData, data];
         });
+        notify();
      });
 
      return ()=>{
@@ -327,7 +330,7 @@ const logOut = (e) =>{
                     />
         )}
       
-      <span>{user_id?.substr(0,10)}</span>
+      <span>{user_id && user_id?.substr(0,10)}</span>
       <span className="btn_main" onClick={logOut}>logout</span>
       <span style={{margin:"10px"}} className="btn_main">Export Data</span>
       <span style={{margin:"10px"}} onClick={()=>setDarkMode(!darkMode)} className="btn_main">Mode ({darkMode?"dark":"light"})</span>
@@ -419,7 +422,7 @@ const logOut = (e) =>{
   sidebar_main_chat_data = (
     <>
       <div className="contacts">
-        {chatsLists.map((contact, index) => {
+        {chatsLists?.reverse()?.map((contact, index) => {
           return (
             <>
               <div className="contact_wrapper data_tosearch">
@@ -525,7 +528,16 @@ const logOut = (e) =>{
     </>
   );
 
+  const notify = () => {
+    const user_ringtone_not = document.querySelectorAll('.notification_audio');
+    user_ringtone_not.forEach((ring)=>{
+    ring?.play();
+    });
+    };
+
   return (
+    <>
+      <audio style={{"display":"none"}} id="notification_audio" className="notification_audio" src={notification_music} />
     <div className="main_app">
       <div className="flex_end">
         <div>Direct Message</div>
@@ -669,5 +681,6 @@ const logOut = (e) =>{
         </div>
       </div>
     </div>
+    </>
   );
 }
