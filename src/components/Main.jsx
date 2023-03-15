@@ -109,6 +109,7 @@ export default function Main({socket}) {
    useEffect(()=>{
     // if(!user_id) return () => {}
     socket?.on("me", (id) => setMe(id));
+    if(!user_id) return ()=>{}
     socket?.emit('newUser', user_id);
 
   },[socket,user_id]);
@@ -129,13 +130,13 @@ export default function Main({socket}) {
   },[socket]);
   useEffect(()=>{
     if(!lastSeens) return ()=>{}
-    console.log(lastSeens);
-     lastSeens.map((seen)=>{
-      const users = document.querySelectorAll('.status_'+seen?.phone?.replace('+',"_").toLowerCase());
-     const status_span = document.querySelectorAll('.status_span');
+    const status_span = document.querySelectorAll('.status_span');
      status_span.forEach((span)=>{
       span.innerHTML = "";
-     })
+     });
+     lastSeens.map((seen)=>{
+      const users = document.querySelectorAll('.status_'+seen?.phone?.replace('+',"_").toLowerCase());
+     
       users.forEach((user)=>{
           user.innerHTML = `Last Seen: ${getAppTimeAgo(seen?.now)}`;
       });
@@ -186,12 +187,12 @@ const main_app_wrappers = document.querySelectorAll('.main_app');
   },[fullScreen])
 
   useEffect(()=>{
+    const status = document.querySelectorAll('.status');
+    status.forEach((stat)=>{
+        stat.innerHTML = "";
+    });
     onlineUsers.forEach((user)=>{
         const users = document.querySelectorAll('.user_'+user?.username?.replace('+',"_").toLowerCase());
-        const status = document.querySelectorAll('.status');
-        status.forEach((status)=>{
-            status.innerHTML = "";
-        })
         users.forEach((user)=>{
             user.innerHTML = "online";
         });
@@ -601,7 +602,7 @@ const logOut = (e) =>{
                 />
                 <div className="user_status">
                   <h3>{selectedChat.name}</h3>
-                  <span className={"status user_"+selectedChat?.phone?.replace('+',"_").toLowerCase()}>last seen: 1min ago</span>
+                  <span className={"user_"+selectedChat?.phone?.replace('+',"_").toLowerCase() + " status"}>last seen: 1min ago</span>
                   <span className={"status_span status_"+selectedChat?.phone?.replace('+',"_").toLowerCase()}></span>
                 </div>
               </div>
