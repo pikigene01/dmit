@@ -111,6 +111,27 @@ export default function Main({ socket }) {
       });
     }
   }, [selectedChat.chatOpen, selectedChat.name, messages]);
+
+  const countNames = (value) => {
+    let dataFind = [];
+      let dataFindarray = [];
+
+      messages.map((msgmap) => {
+        dataFind.push(msgmap);
+        var getFind = dataFind.find((msg) => {
+          return (
+            msg.to === value || msg.from === value
+          );
+        });
+        if (getFind !== undefined) {
+          dataFindarray.push(getFind);
+          let new_array = dataFind.filter((msg) => msg.msg !== getFind?.msg);
+          dataFind = new_array; //l did filter data to remove added messages
+        }
+      });
+    return dataFindarray.length;
+ };
+
   useEffect(() => {
     if (darkMode) {
       document.body.classList.add("dark-mode");
@@ -610,6 +631,14 @@ export default function Main({ socket }) {
     <>
       <div className="contacts">
         {chatsLists?.reverse()?.map((contact, index) => {
+         
+     let getResponse = countNames(contact?.phone);
+     if(getResponse > 10){
+      getResponse = `9+`;
+     }else{
+      getResponse = getResponse;
+     }
+     
           return (
             <>
               <div
@@ -627,6 +656,7 @@ export default function Main({ socket }) {
                   onClick={(e) => selectThisChat(contact)}
                   title="add this to conversation"
                 >
+                
                   <img
                     data-target="chats"
                     data-value={contact.phone}
@@ -637,18 +667,29 @@ export default function Main({ socket }) {
                     }
                     alt="profile_pic"
                   />
+                    <span className="space_between">
+
                   <span
                     className="contact_details"
                     data-target="chats"
                     data-value={contact.phone}
                   >
+                      <span>
                     <h3 data-target="chats" data-value={contact.phone}>
                       {contact?.name?.substr(0, 10)}
                     </h3>
                     <p data-target="chats" data-value={contact.phone}>
                       {contact.phone?.substr(0, 17)}
                     </p>
+                     
+                    </span>
                   </span>
+
+                  <span className="badge">
+                      {getResponse}
+                      </span>
+                  </span>
+
                 </div>
                 <div className="contact_option">
                   <img

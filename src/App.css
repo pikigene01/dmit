@@ -352,11 +352,28 @@ border-radius: 10px 5px 0px 12px;
     flex-direction: row;
     align-items: center;
 }
+.space_between{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
 .fullmode{
     width: 20px;
     height: 20px;
     display: block;
     border: 2px solid var(--text-color);
+}
+.badge{
+    width: 25px;
+    height: 25px;
+    color: var(--first-color);
+    background: blue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    font-size: 10px;
 }
 .minimize{
     width: 20px;
