@@ -1,6 +1,6 @@
 
 import useLocalStorageArray from "./useLocalStorage";
-let phone_pattern  = /^[.+\+.+0-9]*$/;//this test will test user_id not to include letters
+let phone_pattern  = /^[.+\+.+][0-9]*$/;//this test will test user_id not to include letters
 let email_pattern  =  /^.+\@.+$/;//this test will test email
 let letters_and_numbers_pattern  =  /^[a-zA-Z0-9 ]*$/;//this test will test letters and numbers
 export const AddMessageFunction = async(msg,type,user_id) =>{

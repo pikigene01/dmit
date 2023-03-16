@@ -74,6 +74,8 @@ export default function Main({ socket }) {
       swal("Warning", "phone must include +", "warning");
       return () => {};
     }
+    let testresult = await testPatternPhone(phone);
+    if(!testresult) return ()=>{}
 
     let contactData = { name, phone };
 
