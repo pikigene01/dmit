@@ -368,6 +368,63 @@ border-radius: 10px 5px 0px 12px;
 input[value]{
     color: var(--text-color);
 }
+.gene_menu{
+    position: absolute;
+    width:150px;
+    height: 200px;
+    background: var(--body-color);
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    z-index: var(--z-modal);
+}
+.menu_header{
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    margin-right: 5px;
+    padding: 10px 3px;
+    cursor: pointer;
+}
+.toggle_btn{
+    display: flex;
+    align-items: center;
+    width: 50px;
+    height: 25px;
+    border-radius: 20px;
+    background: var(--first-color);
+    cursor: pointer;
+}
+.toggle{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: block;
+    margin: 0px 5px;
+    background: var(--text-color);
+}
+.toggle_btn.active .toggle{
+    background: var(--body-color);
+}
+.toggle_btn.active{
+    display: flex;
+    justify-content: end;
+}
+.menu_items{
+    width: 100%;
+    font-size: 15px;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+.item{
+    width: 100%;
+    padding: 7px 5px;
+    border-bottom: 2px solid var(--text-color);
+    cursor: pointer;
+}
 @media screen and (max-width:900px) {
     .sidebar.hide{
         display: none !important;
@@ -375,7 +432,22 @@ input[value]{
     .dm_msgs.hide{
         display: none !important;
     }
+    .main_app{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        padding-top: 20px;
+    }
     .gridTwo{
         grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+@media screen and (max-width: 400px){
+    .input_wrapper{
+        flex-direction: column;
+    }
+    .input_wrapper .input{
+   margin: 10px 0px;
     }
 }
