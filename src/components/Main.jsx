@@ -75,7 +75,7 @@ export default function Main({ socket }) {
       return () => {};
     }
     let testresult = await testPatternPhone(phone);
-    if(!testresult) return ()=>{}
+    if (!testresult) return () => {};
 
     let contactData = { name, phone };
 
@@ -116,23 +116,21 @@ export default function Main({ socket }) {
 
   const countNames = (value) => {
     let dataFind = [];
-      let dataFindarray = [];
+    let dataFindarray = [];
 
-      messages.map((msgmap) => {
-        dataFind.push(msgmap);
-        var getFind = dataFind.find((msg) => {
-          return (
-            msg.to === value || msg.from === value
-          );
-        });
-        if (getFind !== undefined) {
-          dataFindarray.push(getFind);
-          let new_array = dataFind.filter((msg) => msg.msg !== getFind?.msg);
-          dataFind = new_array; //l did filter data to remove added messages
-        }
+    messages.map((msgmap) => {
+      dataFind.push(msgmap);
+      var getFind = dataFind.find((msg) => {
+        return msg.to === value || msg.from === value;
       });
+      if (getFind !== undefined) {
+        dataFindarray.push(getFind);
+        let new_array = dataFind.filter((msg) => msg.msg !== getFind?.msg);
+        dataFind = new_array; //l did filter data to remove added messages
+      }
+    });
     return dataFindarray.length;
- };
+  };
 
   useEffect(() => {
     if (darkMode) {
@@ -213,7 +211,7 @@ export default function Main({ socket }) {
       if (fullScreen) {
         main_app.requestFullscreen();
       } else {
-        if(document.fullscreen){
+        if (document.fullscreen) {
           document?.exitFullscreen();
         }
       }
@@ -324,47 +322,49 @@ export default function Main({ socket }) {
     setChatsLists(new_contacts);
   };
 
-  const loginForm = async(e) => {
+  const loginForm = async (e) => {
     e.preventDefault();
     if (!appData.phone.includes("+")) {
       swal("Warning", "phone must include +", "warning");
       return () => {};
     }
-   let testResult = await testPatternPhone(appData.phone);
-   if(!testResult){
-    swal("Warning", "please do not include letters as your phone number", "warning");
-   }
-    if(!testResult) return ()=>{}
+    let testResult = await testPatternPhone(appData.phone);
+    if (!testResult) {
+      swal(
+        "Warning",
+        "please do not include letters as your phone number",
+        "warning"
+      );
+    }
+    if (!testResult) return () => {};
 
-  let response = socket?.emit("logIn", appData.phone);
-  if(!response?.connected){
-   swal("Warning", "you can not login whilst offline", "warning");
-  }
+    let response = socket?.emit("logIn", appData.phone);
+    if (!response?.connected) {
+      swal("Warning", "you can not login whilst offline", "warning");
+    }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
+    socket?.on("loginResponse", (data) => {
+      if (data.success) {
+        switch (data?.type) {
+          case "login":
+            setUser_id(data.phone);
+            swal("Suceess", data?.msg, "success");
+            break;
+          case "logout":
+            setUser_id(false);
+            swal("Suceess", data?.msg, "success");
 
-     socket?.on("loginResponse", (data)=>{
-      if(data.success){
-       switch(data?.type){
-        case "login":
-       setUser_id(data.phone);
-        swal("Suceess",data?.msg,"success");
-        break;
-        case "logout":
-        setUser_id(false);
-        swal("Suceess",data?.msg,"success");
-         
-        break;
-       }
-      }else{
+            break;
+        }
+      } else {
         swal("Warning", data?.msg, "warning");
       }
-
-     });
-     return ()=>{
+    });
+    return () => {
       socket?.off("loginResponse");
-     }
+    };
   }, [socket]);
   const liveSearch = (e) => {
     // Locate the card elements
@@ -389,12 +389,12 @@ export default function Main({ socket }) {
     }
   };
   const logOut = (e) => {
-   let response = socket?.emit("logout", user_id);
+    let response = socket?.emit("logout", user_id);
     hideMenu(e);
-    setSelectedChat({...selectedChat,chatOpen:false,phone:""});
-    if(!response?.connected){
+    setSelectedChat({ ...selectedChat, chatOpen: false, phone: "" });
+    if (!response?.connected) {
       swal("Warning", "you can not logout whilst offline", "warning");
-     }
+    }
   };
   const hideMenu = (e) => {
     const geneMenus = document.querySelectorAll(".gene_menu");
@@ -633,14 +633,13 @@ export default function Main({ socket }) {
     <>
       <div className="contacts">
         {chatsLists?.reverse()?.map((contact, index) => {
-         
-     let getResponse = countNames(contact?.phone);
-     if(getResponse > 10){
-      getResponse = `9+`;
-     }else{
-      getResponse = getResponse;
-     }
-     
+          let getResponse = countNames(contact?.phone);
+          if (getResponse > 10) {
+            getResponse = `9+`;
+          } else {
+            getResponse = getResponse;
+          }
+
           return (
             <>
               <div
@@ -658,7 +657,6 @@ export default function Main({ socket }) {
                   onClick={(e) => selectThisChat(contact)}
                   title="add this to conversation"
                 >
-                
                   <img
                     data-target="chats"
                     data-value={contact.phone}
@@ -669,29 +667,30 @@ export default function Main({ socket }) {
                     }
                     alt="profile_pic"
                   />
-                    <span className="space_between">
+                  <span className="space_between">
+                    <span
+                      className="contact_details"
+                      data-target="chats"
+                      data-value={contact.phone}
+                    >
+                      <span data-target="chats" data-value={contact.phone}>
+                        <h3 data-target="chats" data-value={contact.phone}>
+                          {contact?.name?.substr(0, 10)}
+                        </h3>
+                        <p data-target="chats" data-value={contact.phone}>
+                          {contact.phone?.substr(0, 17)}
+                        </p>
+                      </span>
+                    </span>
 
-                  <span
-                    className="contact_details"
-                    data-target="chats"
-                    data-value={contact.phone}
-                  >
-                      <span>
-                    <h3 data-target="chats" data-value={contact.phone}>
-                      {contact?.name?.substr(0, 10)}
-                    </h3>
-                    <p data-target="chats" data-value={contact.phone}>
-                      {contact.phone?.substr(0, 17)}
-                    </p>
-                     
+                    <span
+                      data-target="chats"
+                      data-value={contact.phone}
+                      className="badge"
+                    >
+                      {getResponse}
                     </span>
                   </span>
-
-                  <span className="badge">
-                      {getResponse}
-                      </span>
-                  </span>
-
                 </div>
                 <div className="contact_option">
                   <img
@@ -1012,9 +1011,7 @@ export default function Main({ socket }) {
                           >
                             {msg.msg}{" "}
                           </span>
-                          <span data-target="msg"
-                            data-value={msg?.now}
-                            >
+                          <span data-target="msg" data-value={msg?.now}>
                             {getAppTimeAgo(msg?.now)}
                           </span>
                           {/* <span>{msg.time}</span> */}
