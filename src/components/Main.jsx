@@ -408,28 +408,29 @@ export default function Main({ socket }) {
     let positionY = e.clientY;
     setMenuToDisplay({});
     if (e.target.getAttribute("data-target")) {
-      var toView = e.target.getAttribute("data-target");
+      var toView = e.target.getAttribute("data-target"),
+      value = e.target.getAttribute("data-value");
 
       switch (toView) {
         case "msg":
           setMenuToDisplay({
-            msg: true,
+            msg: true,value,
           });
           break;
         case "file":
           setMenuToDisplay({
-            file: true,
+            file: true,value,
           });
           break;
         case "chats":
           setMenuToDisplay({
-            chats: true,
+            chats: true,value,
           });
 
           break;
         case "contacts":
           setMenuToDisplay({
-            contacts: true,
+            contacts: true,value,
           });
 
           break;
@@ -480,6 +481,60 @@ export default function Main({ socket }) {
       // }
     });
   };
+  const doActionToMenuClick = (action)=>{
+    let messages_update = messages,
+      getStateValue = menuToDisplay.value,
+      contacts_update = contacts,
+      chatslists_update = chatsLists;
+          if(menuToDisplay?.msg){
+            switch (action) {
+              case "delete":
+            messages_update = messages_update.filter((msg) => msg.now !== getStateValue);
+            setMessages(messages_update);
+              break;
+          }
+        }
+          if(menuToDisplay?.contacts){
+            switch (action) {
+              case "delete":
+            contacts_update = contacts_update.filter((contact) => contact.phone !== getStateValue);
+            setContacts(contacts_update);
+              break;
+          }
+        }
+          if(menuToDisplay?.chats){
+            switch (action) {
+              case "delete":
+            chatslists_update = chatslists_update.filter((contact) => contact.phone !== getStateValue);
+            setChatsLists(chatslists_update);
+              break;
+          }
+        }
+  }
+  useEffect(()=>{
+const menu_items = document.querySelectorAll('.item');
+      menu_items.forEach((item)=>{
+    
+        item.onclick=(e)=>{
+          var action = e.target.getAttribute('data-target');
+          switch (action) {
+            
+            case "delete":
+              doActionToMenuClick(action);
+              break;
+            case "unread":
+              doActionToMenuClick(action);
+             
+              break;
+            case "reply":
+              doActionToMenuClick(action);
+    
+              break;
+            
+          }
+        }
+      })
+  },[menuToDisplay]);
   var sidebar_main_profile = "";
   sidebar_main_profile = (
     <>
@@ -820,7 +875,7 @@ export default function Main({ socket }) {
             {menuToDisplay?.msg && (
               <>
                 <span className="item" data-target="delete">
-                  Delete
+                  Delete For Me
                 </span>
               </>
             )}
