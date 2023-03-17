@@ -409,28 +409,32 @@ export default function Main({ socket }) {
     setMenuToDisplay({});
     if (e.target.getAttribute("data-target")) {
       var toView = e.target.getAttribute("data-target"),
-      value = e.target.getAttribute("data-value");
+        value = e.target.getAttribute("data-value");
 
       switch (toView) {
         case "msg":
           setMenuToDisplay({
-            msg: true,value,
+            msg: true,
+            value,
           });
           break;
         case "file":
           setMenuToDisplay({
-            file: true,value,
+            file: true,
+            value,
           });
           break;
         case "chats":
           setMenuToDisplay({
-            chats: true,value,
+            chats: true,
+            value,
           });
 
           break;
         case "contacts":
           setMenuToDisplay({
-            contacts: true,value,
+            contacts: true,
+            value,
           });
 
           break;
@@ -481,60 +485,63 @@ export default function Main({ socket }) {
       // }
     });
   };
-  const doActionToMenuClick = (action)=>{
+  const doActionToMenuClick = (action) => {
     let messages_update = messages,
       getStateValue = menuToDisplay.value,
       contacts_update = contacts,
       chatslists_update = chatsLists;
-          if(menuToDisplay?.msg){
-            switch (action) {
-              case "delete":
-            messages_update = messages_update.filter((msg) => msg.now !== getStateValue);
-            setMessages(messages_update);
-              break;
-          }
+    if (menuToDisplay?.msg) {
+      switch (action) {
+        case "delete":
+          messages_update = messages_update.filter(
+            (msg) => msg.now !== getStateValue
+          );
+          setMessages(messages_update);
+          break;
+      }
+    }
+    if (menuToDisplay?.contacts) {
+      switch (action) {
+        case "delete":
+          contacts_update = contacts_update.filter(
+            (contact) => contact.phone !== getStateValue
+          );
+          setContacts(contacts_update);
+          break;
+      }
+    }
+    if (menuToDisplay?.chats) {
+      switch (action) {
+        case "delete":
+          chatslists_update = chatslists_update.filter(
+            (contact) => contact.phone !== getStateValue
+          );
+          setChatsLists(chatslists_update);
+          break;
+      }
+    }
+  };
+  useEffect(() => {
+    const menu_items = document.querySelectorAll(".item");
+    menu_items.forEach((item) => {
+      item.onclick = (e) => {
+        var action = e.target.getAttribute("data-target");
+        switch (action) {
+          case "delete":
+            doActionToMenuClick(action);
+            break;
+          case "unread":
+            doActionToMenuClick(action);
+
+            break;
+          case "reply":
+            doActionToMenuClick(action);
+
+            break;
         }
-          if(menuToDisplay?.contacts){
-            switch (action) {
-              case "delete":
-            contacts_update = contacts_update.filter((contact) => contact.phone !== getStateValue);
-            setContacts(contacts_update);
-              break;
-          }
-        }
-          if(menuToDisplay?.chats){
-            switch (action) {
-              case "delete":
-            chatslists_update = chatslists_update.filter((contact) => contact.phone !== getStateValue);
-            setChatsLists(chatslists_update);
-              break;
-          }
-        }
-  }
-  useEffect(()=>{
-const menu_items = document.querySelectorAll('.item');
-      menu_items.forEach((item)=>{
-    
-        item.onclick=(e)=>{
-          var action = e.target.getAttribute('data-target');
-          switch (action) {
-            
-            case "delete":
-              doActionToMenuClick(action);
-              break;
-            case "unread":
-              doActionToMenuClick(action);
-             
-              break;
-            case "reply":
-              doActionToMenuClick(action);
-    
-              break;
-            
-          }
-        }
-      })
-  },[menuToDisplay]);
+      };
+    });
+  }, [menuToDisplay]);
   var sidebar_main_profile = "";
   sidebar_main_profile = (
     <>
@@ -543,15 +550,17 @@ const menu_items = document.querySelectorAll('.item');
           <img
             src={employees_icon_img}
             className={
-              "user user_" + user_id
-                ? user_id?.replace("+", "_").toLowerCase()
-                : null
+              user_id
+                ? "user_" +
+                  user_id.toString().replace("+", "_").toLowerCase() +
+                  " user"
+                : null + " user"
             }
             alt="profile_pic"
           />
         )}
 
-        <span>{user_id && user_id?.substr(0, 10)}</span>
+        <span>{user_id && user_id.toString().substr(0, 10)}</span>
         <span className="btn_main" onClick={(e) => logOut(e)}>
           logout
         </span>
