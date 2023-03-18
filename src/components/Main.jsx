@@ -139,9 +139,19 @@ export default function Main({ socket }) {
       document.body.classList.remove("dark-mode");
     }
   }, [darkMode]);
+  const getAuthanticated = async()=>{
+    let getAuthResponse = await testPatternPhone(user_id);
 
+    if(getAuthResponse){
+     
+    }else{
+      setUser_id(false);
+    }
+    }
+    
   useEffect(() => {
     // if(!user_id) return () => {}
+    getAuthanticated();
     socket?.on("me", (id) => setMe(id));
     if (!user_id) return () => {};
     socket?.emit("newUser", user_id);
