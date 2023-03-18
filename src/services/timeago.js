@@ -1,6 +1,6 @@
 export const getAppTimeAgo=(date_pass)=>{
        
-    // const interval= setInterval(()=>{
+    // const interval = setInterval(()=>{
         var now = new Date().getTime();
         var date2 = new Date(date_pass).getTime();
 
@@ -17,8 +17,10 @@ export const getAppTimeAgo=(date_pass)=>{
            whole_time = months + " Months Ago";
         }else if(days > 0){
            whole_time = days + " days " + hours + " hrs "+ minutes + " mins";
+        }else if(hours > 0){
+         whole_time =  hours + " hrs ago";
         }else{
-         whole_time =  hours + " hrs "+ minutes + " mins";
+         whole_time =  minutes + " mins ago";
         }
         return whole_time;
     //   },1000);
