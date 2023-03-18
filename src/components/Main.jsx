@@ -20,6 +20,7 @@ export default function Main({ socket }) {
   const [appData, setAppData] = useState({
     search: "",
     phone: "",
+    reply: false,
   });
   const [me, setMe] = useState();
   const [fullScreen, setFullScreen] = useState(false);
@@ -139,16 +140,15 @@ export default function Main({ socket }) {
       document.body.classList.remove("dark-mode");
     }
   }, [darkMode]);
-  const getAuthanticated = async()=>{
+  const getAuthanticated = async () => {
     let getAuthResponse = await testPatternPhone(user_id);
 
-    if(getAuthResponse){
-     
-    }else{
+    if (getAuthResponse) {
+    } else {
       setUser_id(false);
     }
-    }
-    
+  };
+
   useEffect(() => {
     // if(!user_id) return () => {}
     getAuthanticated();
@@ -508,6 +508,14 @@ export default function Main({ socket }) {
           );
           setMessages(messages_update);
           break;
+        case "reply":
+          hideMenu();
+          setAppData({ ...appData, reply: !appData?.reply });
+
+          document.querySelectorAll(".send_msg_input").forEach((input) => {
+            //do some action on send message input
+          });
+          break;
       }
     }
     if (menuToDisplay?.contacts) {
@@ -596,6 +604,7 @@ export default function Main({ socket }) {
   const sendMessage = (e) => {
     e.preventDefault();
     if (!userMessage) return () => {};
+    setAppData({ ...appData, reply: false });
     let msgData = {};
     var now = new Date();
     var hour = now.getHours();
@@ -884,7 +893,7 @@ export default function Main({ socket }) {
             {menuToDisplay?.msg && (
               <>
                 <span className="item" data-target="reply">
-                  Reply
+                  {appData?.reply ? "Cancel Reply" : "Reply"}
                 </span>
                 <span className="item" data-target="unread">
                   Mark As Unread
@@ -1113,10 +1122,11 @@ export default function Main({ socket }) {
                       value={userMessage}
                       onChange={handleMsgChange}
                       type="text"
+                      className="send_msg_input"
                       placeholder="type to send message"
                     />
                     <button className="btn_main" type="submit">
-                      send
+                      {appData.reply ? "reply" : "send"}
                     </button>
                   </div>
                 </form>
