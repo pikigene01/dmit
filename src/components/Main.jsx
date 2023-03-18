@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback,useContext } from "react";
+import React, { useContext } from "react";
 import { AppContext } from "../contexts/AppProvider";
 import {
   cancel_chat_icon,
@@ -10,23 +10,47 @@ import {
   start_chat_icon,
   websites_icon_img,
 } from "../services/icons";
-import useLocalStorageArray from "../services/useLocalStorageArray";
-import useLocalStorage from "../services/useLocalStorage";
 import { getAppTimeAgo } from "../services/timeago";
 import notification_music from "../audios/notification.mp3";
-import { testPatternPhone } from "../services/functions";
 
 export default function Main() {
   const {
-  user_id,logOut,createJsonFile,loadJsonFile,setDarkMode,setTabActive,tabActive,
-chatsLists,countNames,selectThisChat,removeChatsList,handleContactChange,contactDetails,saveContact,
-contacts,addToChat,removeContact,hideMenu,menuToDisplay,changeFileHandler,setFullScreen,selectedChat,
-appData,handleChange,setSettings,settings,darkMode,loginForm,setSelectedChat,setRefLast,resendMsg,sendMessage,
-userMessage,handleMsgChange
+    user_id,
+    logOut,
+    createJsonFile,
+    loadJsonFile,
+    setDarkMode,
+    setTabActive,
+    tabActive,
+    chatsLists,
+    countNames,
+    selectThisChat,
+    removeChatsList,
+    handleContactChange,
+    contactDetails,
+    saveContact,
+    contacts,
+    addToChat,
+    removeContact,
+    hideMenu,
+    menuToDisplay,
+    changeFileHandler,
+    setFullScreen,
+    selectedChat,
+    appData,
+    handleChange,
+    setSettings,
+    settings,
+    darkMode,
+    loginForm,
+    setSelectedChat,
+    setRefLast,
+    resendMsg,
+    sendMessage,
+    userMessage,
+    handleMsgChange,
   } = useContext(AppContext);
-  
-  // const fileTypeAllowed = /image\/(png|jpg|jpeg)/i;
- 
+
   var sidebar_main_profile = "";
   sidebar_main_profile = (
     <>
@@ -49,10 +73,18 @@ userMessage,handleMsgChange
         <span className="btn_main" onClick={(e) => logOut(e)}>
           logout
         </span>
-        <span onClick={()=>createJsonFile()} style={{ margin: "10px" }} className="btn_main">
+        <span
+          onClick={() => createJsonFile()}
+          style={{ margin: "10px" }}
+          className="btn_main"
+        >
           Export Data
         </span>
-        <span onClick={()=>loadJsonFile()} style={{ margin: "10px" }} className="btn_main">
+        <span
+          onClick={() => loadJsonFile()}
+          style={{ margin: "10px" }}
+          className="btn_main"
+        >
           Import Data
         </span>
         <span
@@ -65,7 +97,7 @@ userMessage,handleMsgChange
       </div>
     </>
   );
- 
+
   var sidebar_main_chat = "";
   sidebar_main_chat = (
     <div className="tabs">
@@ -119,9 +151,12 @@ userMessage,handleMsgChange
                   onClick={(e) => selectThisChat(contact)}
                   title="add this to conversation"
                 >
-                  <span className={"offline status_check profile_" +
+                  <span
+                    className={
+                      "offline status_check profile_" +
                       contact?.phone?.replace("+", "_").toLowerCase()
-                    } />
+                    }
+                  />
 
                   <img
                     data-target="chats"
@@ -304,11 +339,11 @@ userMessage,handleMsgChange
                 </span>
               </>
             )}
-            <span className="item" onClick={()=>loadJsonFile()}>
-            Import Chats
+            <span className="item" onClick={() => loadJsonFile()}>
+              Import Chats
             </span>
-            <span className="item" onClick={()=>createJsonFile()}>
-            Export Data
+            <span className="item" onClick={() => createJsonFile()}>
+              Export Data
             </span>
             <span className="item" onClick={(e) => logOut(e)}>
               logout
@@ -319,8 +354,6 @@ userMessage,handleMsgChange
     </>
   );
 
- 
-
   return (
     <>
       <audio
@@ -330,7 +363,14 @@ userMessage,handleMsgChange
         src={notification_music}
       />
       <div className="main_app">
-      <input className="input is-hidden jsonFileInput" id='jsonFileInput' accept='.json' name="file" onChange={changeFileHandler} type="file"/>
+        <input
+          className="input is-hidden jsonFileInput"
+          id="jsonFileInput"
+          accept=".json"
+          name="file"
+          onChange={changeFileHandler}
+          type="file"
+        />
         {menuInserted}
         <div className="flex_end">
           <div>Gene Piki</div>

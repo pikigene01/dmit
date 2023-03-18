@@ -3,12 +3,12 @@ import Header from './Header'
 import Main from './Main'
 import Footer from './Footer'
 
-export default function WholeApp({socket}) {
+export default function WholeApp() {
   return (
     <div className='dm_wrapper'>
-        <Header socket={socket} />
-        <Main socket={socket}/>
-        <Footer socket={socket}/>
+        <Header />
+        <Main/>
+        <Footer/>
     </div>
   )
 }
