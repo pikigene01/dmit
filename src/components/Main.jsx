@@ -17,6 +17,9 @@ import notification_music from "../audios/notification.mp3";
 import { testPatternPhone } from "../services/functions";
 
 export default function Main({ socket }) {
+  // const fileTypeAllowed = /image\/(png|jpg|jpeg)/i;
+  const fileTypeAllowed = /(json)/i;
+ const [file, setFile] = useState(null);
   const [appData, setAppData] = useState({
     search: "",
     phone: "",
@@ -114,6 +117,60 @@ export default function Main({ socket }) {
       });
     }
   }, [selectedChat.chatOpen, selectedChat.name, messages]);
+
+
+  useEffect(()=>{
+    if(!file) return ()=>{}
+
+
+    var reader = new FileReader();
+        reader.onload = onReaderLoad;
+        reader.readAsText(file);
+
+    function onReaderLoad(event){
+      var obj = JSON.parse(event.target.result);
+      const loadedContacts = obj[0]?.contacts;
+      const loadedChatsLists = obj[0]?.chatsLists;
+      const loadedMessages = obj[0]?.messages;
+
+
+      if(loadedContacts?.length > 0){
+        loadedContacts?.map((contact)=>{
+          if(contacts.some((con)=>con.phone === contact?.phone)) return ()=>{}
+          setContacts((prevData)=>{
+            return [...prevData, contact];
+            });
+        });
+      }
+     
+      if(loadedChatsLists?.length > 0){
+        loadedChatsLists?.map((chats)=>{
+          if(chatsLists.some((chat)=>chat.phone === chats?.phone)) return ()=>{}
+        setChatsLists((prevData)=>{
+        return [...prevData,chats];
+        });
+        })
+      }
+     
+      if(loadedMessages?.length > 0){
+        loadedMessages?.map((msg)=>{
+          if(messages.some((msgLocal)=>msgLocal.now === msg?.now)) return ()=>{}
+             setMessages((prevData)=>{
+              return [...prevData,msg];
+              });
+        });
+      }
+     
+  }
+
+  },[file]);
+
+  const changeFileHandler = (e) => {
+    const files = e.target.files[0];
+    if (!files.type.match(fileTypeAllowed)) return ()=>{}
+    setFile(files);
+
+  }
 
   const countNames = (value) => {
     let dataFind = [];
@@ -406,6 +463,25 @@ export default function Main({ socket }) {
       swal("Warning", "you can not logout whilst offline", "warning");
     }
   };
+  const loadJsonFile =()=>{
+    const fileInputs = document.querySelectorAll('.jsonFileInput');
+    
+    fileInputs.forEach((input)=>{
+      input.click();
+    })
+  }
+  const createJsonFile =()=>{
+  let newArrayTocreate = [];
+  let objectData = {contacts,chatsLists,messages};
+  var pushedData = newArrayTocreate.push(objectData);
+var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(newArrayTocreate));
+var createdFile = document.createElement('a');
+createdFile.setAttribute("href",     dataStr     );
+createdFile.setAttribute("download", "genepiki.json");
+document.body.appendChild(createdFile);
+createdFile.click();
+createdFile.remove();
+  }
   const hideMenu = (e) => {
     const geneMenus = document.querySelectorAll(".gene_menu");
 
@@ -582,8 +658,11 @@ export default function Main({ socket }) {
         <span className="btn_main" onClick={(e) => logOut(e)}>
           logout
         </span>
-        <span style={{ margin: "10px" }} className="btn_main">
+        <span onClick={()=>createJsonFile()} style={{ margin: "10px" }} className="btn_main">
           Export Data
+        </span>
+        <span onClick={()=>loadJsonFile()} style={{ margin: "10px" }} className="btn_main">
+          Import Data
         </span>
         <span
           style={{ margin: "10px" }}
@@ -821,7 +900,7 @@ export default function Main({ socket }) {
         </div>
 
         <div className="contacts">
-          {contacts.map((contact, index) => {
+          {contacts?.map((contact, index) => {
             return (
               <>
                 <div
@@ -921,6 +1000,12 @@ export default function Main({ socket }) {
                 </span>
               </>
             )}
+            <span className="item" onClick={()=>loadJsonFile()}>
+            Import Chats
+            </span>
+            <span className="item" onClick={()=>createJsonFile()}>
+            Export Data
+            </span>
             <span className="item" onClick={(e) => logOut(e)}>
               logout
             </span>
@@ -946,6 +1031,7 @@ export default function Main({ socket }) {
         src={notification_music}
       />
       <div className="main_app">
+      <input className="input is-hidden jsonFileInput" id='jsonFileInput' accept='.json' name="file" onChange={changeFileHandler} type="file"/>
         {menuInserted}
         <div className="flex_end">
           <div>Gene Piki</div>

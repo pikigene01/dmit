@@ -388,12 +388,13 @@ input[value]{
 .gene_menu{
     position: absolute;
     width:150px;
-    height: 200px;
+    height: auto;
     background: var(--body-color);
     display: flex;
     flex-direction: column;
     border-radius: 10px;
     z-index: var(--z-modal);
+    padding-bottom: 20px;
 }
 .menu_header{
     display: flex;
