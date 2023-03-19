@@ -66,6 +66,7 @@
 /*  */
 body {
   background: var(--body-color);
+  overflow: hidden;
 }
 
 .skeleton {
@@ -320,7 +321,7 @@ body {
 
 .fromMe {
   display: flex;
-  text-align: end;
+  text-align: flex-end;
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
@@ -407,7 +408,7 @@ input[value] {
 .menu_header {
   display: flex;
   justify-content: space-between;
-  align-items: end;
+  align-items: flex-end;
   margin-right: 5px;
   padding: 10px 3px;
   cursor: pointer;
@@ -434,7 +435,7 @@ input[value] {
 }
 .toggle_btn.active {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }
 .menu_items {
   width: 100%;

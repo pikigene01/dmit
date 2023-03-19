@@ -621,6 +621,8 @@ function AppProvider({ children, socket }) {
           );
           setContacts(contacts_update);
           break;
+          default:
+            return () => {};
       }
     }
     if (menuToDisplay?.chats) {
