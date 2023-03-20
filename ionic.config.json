@@ -1,0 +1,7 @@
+{
+    "name": "genepiki",
+    "integrations": {
+      "capacitor": {}
+    },
+    "type": "react"
+  }
