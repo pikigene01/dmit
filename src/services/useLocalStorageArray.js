@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react'
 
 
-const PREFIX = 'dmapp-';
+const PREFIX = 'genepiki-';
 export default function useLocalStorageArray(key, initialValue) {
     const prefixedKey  = PREFIX + key;
 

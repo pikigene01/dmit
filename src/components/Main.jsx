@@ -208,6 +208,17 @@ export default function Main() {
             </>
           );
         })}
+
+        {chatsLists?.length < 1 && (
+          <>
+            <div className="notfound_data">
+              <p>Ooops chats not found</p>
+              <p onClick={(e) => loadJsonFile(e)} className="btn_main">
+                import
+              </p>
+            </div>
+          </>
+        )}
       </div>
     </>
   );
@@ -289,6 +300,16 @@ export default function Main() {
               </>
             );
           })}
+          {contacts?.length < 1 && (
+            <>
+              <div className="notfound_data">
+                <p>No contacts created at the moment</p>
+                <p onClick={(e) => loadJsonFile(e)} className="btn_main">
+                  import
+                </p>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </>
