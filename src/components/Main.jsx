@@ -49,6 +49,7 @@ export default function Main() {
     sendMessage,
     userMessage,
     handleMsgChange,
+    textRows,
   } = useContext(AppContext);
 
   var sidebar_main_profile = "";
@@ -151,12 +152,6 @@ export default function Main() {
                   onClick={(e) => selectThisChat(contact)}
                   title="add this to conversation"
                 >
-                  <span
-                    className={
-                      "offline status_check profile_" +
-                      contact?.phone?.replace("+", "_").toLowerCase()
-                    }
-                  />
 
                   <img
                     data-target="chats"
@@ -564,7 +559,8 @@ export default function Main() {
                 <form onSubmit={sendMessage}>
                   <div data-target="file" className="selected_msgs_input_send">
                     <span data-target="file">file</span>
-                    <input
+                    <textarea
+                      rows={textRows}
                       value={userMessage}
                       onChange={handleMsgChange}
                       type="text"

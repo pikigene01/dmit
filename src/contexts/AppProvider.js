@@ -43,6 +43,8 @@ function AppProvider({ children, socket }) {
   const [settings, setSettings] = useLocalStorage("settings");
   const [user_id, setUser_id] = useLocalStorage("user_id");
   const [onlineUsers, setOnlineUsers] = useState([]);
+  const [textRows, setTextRows] = useState(1);
+  const [textAreavalue, setTextAreavalue] = useState(0);
   const [lastSeens, setLastSeens] = useState([]);
   const [darkMode, setDarkMode] = useLocalStorage("theme_data");
   const [profileImgs, setProfileImgs] = useState([]); //we push user id and url for the image
@@ -66,6 +68,15 @@ function AppProvider({ children, socket }) {
     setContactDetails({ ...contactDetails, [e.target.name]: e.target.value });
   };
   const handleMsgChange = (e) => {
+    setTextAreavalue(prevData=>{
+      return prevData += 1;
+    })
+    if((textAreavalue / 67) >= 1){
+      setTextRows(prevData=>{
+        return prevData += 1;
+      }); 
+      setTextAreavalue(0);
+    }
     setUserMessage(e.target.value);
   };
   const addContactFunction = async (name, phone) => {
@@ -288,7 +299,6 @@ function AppProvider({ children, socket }) {
 
   useEffect(() => {
     const status = document.querySelectorAll(".status");
-    const status_online = document.querySelectorAll(".status_check");
     status.forEach((stat) => {
       stat.innerHTML = "";
     });
@@ -300,22 +310,8 @@ function AppProvider({ children, socket }) {
         user.innerHTML = "online";
       });
     });
-
-    status_online.forEach((stat) => {
-      stat.classList.add("offline");
-      stat.classList.remove("online");
-
-      onlineUsers.forEach((user) => {
-        const profiles = document.querySelectorAll(
-          ".profile_" + user?.username?.replace("+", "_").toLowerCase()
-        );
-        profiles.forEach((profile) => {
-          profile.classList.add("online");
-          profile.classList.remove("offline");
-        });
-      });
-    });
   }, [onlineUsers, selectedChat.msgs]);
+
   useEffect(() => {
     let filterMsgs = messages,
       getContact = [];
@@ -391,6 +387,7 @@ function AppProvider({ children, socket }) {
       msgs: contact?.msgs,
       phone: contact?.phone,
     });
+    setTextRows(1);
   };
 
   const removeContact = (phone) => {
@@ -417,7 +414,7 @@ function AppProvider({ children, socket }) {
       );
     }
     if (!testResult) return () => {};
-
+    setUser_id(appData.phone);
     let response = socket?.emit("logIn", appData.phone);
     if (!response?.connected) {
       swal("Warning", "you can not login whilst offline", "warning");
@@ -625,8 +622,8 @@ function AppProvider({ children, socket }) {
           );
           setContacts(contacts_update);
           break;
-          default:
-            return () => {};
+        default:
+          return () => {};
       }
     }
     if (menuToDisplay?.chats) {
@@ -723,6 +720,7 @@ function AppProvider({ children, socket }) {
     });
 
     setUserMessage("");
+    setTextRows(1);
   };
 
   const resendMsg = (msg) => {
@@ -799,6 +797,7 @@ function AppProvider({ children, socket }) {
     sendMessage,
     userMessage,
     handleMsgChange,
+    textRows,
   };
   return <AppContext.Provider value={values}>{children}</AppContext.Provider>;
 }
