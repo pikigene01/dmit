@@ -1,6 +1,6 @@
 {
     "appId": "io.ionic.genepiki",
-    "appName": "genepiki",
+    "appName": "GenePiki",
     "bundledWebRuntime": false,
     "npmClient": "npm",
     "webDir": "build",

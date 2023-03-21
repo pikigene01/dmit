@@ -179,7 +179,7 @@ export default function Main() {
                           {contact?.name?.substr(0, 10)}
                         </h3>
                         <p data-target="chats" data-value={contact.phone}>
-                          {contact.phone?.substr(0, 17)}
+                          {contact.phone?.substr(0, 13)}
                         </p>
                       </span>
                     </span>

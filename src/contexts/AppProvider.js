@@ -494,7 +494,11 @@ function AppProvider({ children, socket }) {
     var createdFile = document.createElement("a");
     createdFile.setAttribute("href", dataStr);
     createdFile.setAttribute("download", "genepiki.json");
-    document.body.appendChild(createdFile);
+    const main_apps = document.querySelectorAll(".main_app");
+
+    main_apps.forEach((app) => {
+      app.appendChild(createdFile);
+    });
     createdFile.click();
     createdFile.remove();
   };
