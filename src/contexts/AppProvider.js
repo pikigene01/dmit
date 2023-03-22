@@ -31,6 +31,7 @@ function AppProvider({ children, socket }) {
     }
   }, []);
   const [userMessage, setUserMessage] = useState("");
+  const [copyMsg, setCopyMsg] = useState("");
   const [menuToDisplay, setMenuToDisplay] = useState({
     chats: false,
     msg: false,
@@ -68,16 +69,24 @@ function AppProvider({ children, socket }) {
     setContactDetails({ ...contactDetails, [e.target.name]: e.target.value });
   };
   const handleMsgChange = (e) => {
-    setTextAreavalue(prevData=>{
-      return prevData += 1;
-    })
-    if((textAreavalue / 67) >= 1){
-      setTextRows(prevData=>{
-        return prevData += 1;
-      }); 
-      setTextAreavalue(0);
-    }
+    setTextAreavalue((prevData) => {
+      return (prevData += 1);
+    });
     setUserMessage(e.target.value);
+    let eventLength = e.target.value.length;
+    var getRows = Math.ceil(eventLength / 67);
+    if (getRows >= 0) {
+      if(getRows >= 6) return ()=>{}
+      setTextRows((prevData) => {
+        return (prevData = getRows);
+      });
+    }
+    // if((textAreavalue / 67) >= 1){
+    //   setTextRows(prevData=>{
+    //     return prevData += 1;
+    //   }); 
+    //   setTextAreavalue(0);
+    // }
   };
   const addContactFunction = async (name, phone) => {
     if (!name || !phone) return () => {};
@@ -470,7 +479,7 @@ function AppProvider({ children, socket }) {
     let response = socket?.emit("logout", user_id);
     hideMenu(e);
     setSelectedChat({ ...selectedChat, chatOpen: false, phone: "" });
-    setUser_id(false);//for further auth we will remove this.
+    setUser_id(false); //for further auth we will remove this.
     if (!response?.connected) {
       swal("Warning", "you can not logout whilst offline", "warning");
     }
@@ -510,16 +519,19 @@ function AppProvider({ children, socket }) {
   const startInsertMenu = (e) => {
     let positionX = e.clientX;
     let positionY = e.clientY;
+
     setMenuToDisplay({});
     if (e.target.getAttribute("data-target")) {
       var toView = e.target.getAttribute("data-target"),
         value = e.target.getAttribute("data-value");
+        // alert(e.target.innerHTML)
 
       switch (toView) {
         case "msg":
           setMenuToDisplay({
             msg: true,
             value,
+            event:e,
           });
           break;
         case "file":
@@ -532,6 +544,14 @@ function AppProvider({ children, socket }) {
           setMenuToDisplay({
             chats: true,
             value,
+          });
+
+          break;
+        case "paste":
+          setMenuToDisplay({
+            paste: true,
+            value,
+            event:e,
           });
 
           break;
@@ -611,6 +631,23 @@ function AppProvider({ children, socket }) {
             //do some action on send message input
           });
           break;
+        case "copy":
+          hideMenu();
+          
+          document.querySelectorAll(".send_msg_input").forEach((input) => {
+            //do some action on send message input
+            if(menuToDisplay?.event){
+              let eventInnerText = menuToDisplay?.event.target.innerHTML;
+              setUserMessage(prevData=>{
+                return `${prevData} ${eventInnerText}`;
+              });
+              input.select();
+              document.execCommand("copy");
+              setCopyMsg(eventInnerText);
+              window.getSelection().removeAllRanges();
+            }
+          });
+          break;
         default:
           return () => {};
       }
@@ -639,7 +676,39 @@ function AppProvider({ children, socket }) {
           return () => {};
       }
     }
+    if (menuToDisplay?.paste) {
+      switch (action) {
+        case "paste":
+          hideMenu();
+
+          setUserMessage(prevData=>{
+            return `${prevData} ${copyMsg}`;
+          });
+
+          setTimeout(async () => {
+            const text = await navigator.clipboard.readText();
+            if(menuToDisplay.event){
+              menuToDisplay.event.target.value = text;
+            }
+          }, 1000);
+          break;
+        default:
+          return () => {};
+      }
+    }
   };
+
+  useEffect(()=>{
+    document.querySelectorAll(".send_msg_input").forEach((input) => {
+      //do some action on send message input
+      
+        input.addEventListener('contextmenu',(e)=>{
+          e.preventDefault();
+          startInsertMenu(e);
+
+      });
+    });
+  },[selectThisChat]);
   useEffect(() => {
     const menu_items = document.querySelectorAll(".item");
     menu_items.forEach((item) => {
@@ -654,6 +723,12 @@ function AppProvider({ children, socket }) {
 
             break;
           case "reply":
+            doActionToMenuClick(action);
+            break;
+          case "copy":
+            doActionToMenuClick(action);
+            break;
+          case "paste":
             doActionToMenuClick(action);
             break;
           default:
@@ -799,6 +874,7 @@ function AppProvider({ children, socket }) {
     userMessage,
     handleMsgChange,
     textRows,
+    copyMsg
   };
   return <AppContext.Provider value={values}>{children}</AppContext.Provider>;
 }

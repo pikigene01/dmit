@@ -50,6 +50,7 @@ export default function Main() {
     userMessage,
     handleMsgChange,
     textRows,
+    copyMsg
   } = useContext(AppContext);
 
   var sidebar_main_profile = "";
@@ -230,6 +231,8 @@ export default function Main() {
             value={contactDetails.name}
             name="name"
             placeholder="name."
+            data-target="paste"
+            data-value={copyMsg}
           />
           <input
             type="text"
@@ -238,6 +241,8 @@ export default function Main() {
             value={contactDetails.phone}
             name="phone"
             placeholder="+263....."
+            data-target="paste"
+            data-value={copyMsg}
           />
           <button className="btn_main" onClick={saveContact}>
             Add
@@ -339,8 +344,18 @@ export default function Main() {
                 <span className="item" data-target="delete">
                   Delete For Me
                 </span>
+                <span className="item" data-target="copy">
+                  Copy
+                </span>
               </>
             )}
+             {menuToDisplay?.paste && (
+              <>
+                <span className="item" data-target="paste">
+                 Paste
+                </span>
+                </>
+             )}
             {menuToDisplay?.chats && (
               <>
                 <span className="item" data-target="delete">
@@ -458,6 +473,8 @@ export default function Main() {
                         name="phone"
                         value={appData.phone}
                         placeholder="+263......."
+                        data-target="paste"
+                        data-value={copyMsg}
                       />
                       <span>NB: Don't use incognito window...</span>
                       <button
@@ -565,6 +582,8 @@ export default function Main() {
                       onChange={handleMsgChange}
                       type="text"
                       className="send_msg_input"
+                      data-target="paste"
+                      data-value={copyMsg}
                       placeholder="type to send message"
                     />
                     <button className="btn_main" type="submit">
