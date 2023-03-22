@@ -267,6 +267,8 @@ body {
   align-items: center;
   border: 2px solid var(--text-color);
   border-radius: 10px;
+  background: #fff;
+  color: #333;
 }
 .selected_msgs_input_send input,.selected_msgs_input_send textarea {
   width: 100%;

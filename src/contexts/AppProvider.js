@@ -470,6 +470,7 @@ function AppProvider({ children, socket }) {
     let response = socket?.emit("logout", user_id);
     hideMenu(e);
     setSelectedChat({ ...selectedChat, chatOpen: false, phone: "" });
+    setUser_id(false);//for further auth we will remove this.
     if (!response?.connected) {
       swal("Warning", "you can not logout whilst offline", "warning");
     }
