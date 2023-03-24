@@ -128,7 +128,7 @@ export default function Main() {
   sidebar_main_chat_data = (
     <>
       <div className="contacts">
-        {chatsLists?.reverse()?.map((contact, index) => {
+        {chatsLists?.map((contact, index) => {
           let getResponse = countNames(contact?.phone);
           if (getResponse > 10) {
             getResponse = `9+`;
