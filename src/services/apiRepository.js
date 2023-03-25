@@ -1,17 +1,30 @@
 import axios from "axios";
+let apiprogress = {};
+const options = {
+  onUploadProgress: (progressEvent)=>{
+    const {loaded, total} = progressEvent;
+    let percentage = Math.floor( (loaded * 100) / total);
+    apiprogress = {percentage,loaded,total};
+  }
+}
+
 let data_res = {
-  status: 200,
-  message: "data send",
+  apiprogress,
 };
 let headers = {
+  onUploadProgress: (progressEvent)=>{
+    const {loaded, total} = progressEvent;
+    let percent = Math.floor( (loaded * 100) / total);
+    apiprogress = {percent,loaded,total};
+  },
   headers: {
     "content-type": "multipart/form-data",
   },
 };
 export const apiDataPost = async (url, data) => {
   try {
-    await axios.post(url, data).then((res) => {
-      data_res = res.data;
+    await axios.post(url, data,options).then((res) => {
+      data_res += res.data;
     });
   } catch (err) {
     const res = {
@@ -27,7 +40,7 @@ export const apiDataPostForm = async (url, data) => {
     // axios.get('/sanctum/csrf-cookie').then(response => {
 
     await axios.post(url, data, headers).then((res) => {
-      data_res = res.data;
+      data_res += res.data;
     });
   } catch (err) {
     const res = {
@@ -40,8 +53,8 @@ export const apiDataPostForm = async (url, data) => {
 };
 export const apiDataGet = async (url, data) => {
   try {
-    await axios.get(url, data).then((res) => {
-      data_res = res.data;
+    await axios.get(url, data,options).then((res) => {
+      data_res += res.data;
       return data_res;
     });
   } catch (e) {
@@ -56,8 +69,8 @@ export const apiDataGet = async (url, data) => {
 
 export const apiDataDelete = async (url, data) => {
   try {
-    await axios.delete(url, data).then((res) => {
-      data_res = res.data;
+    await axios.delete(url, data,options).then((res) => {
+      data_res += res.data;
       return data_res;
     });
   } catch (e) {

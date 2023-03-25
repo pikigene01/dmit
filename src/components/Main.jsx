@@ -12,6 +12,7 @@ import {
 } from "../services/icons";
 import { getAppTimeAgo } from "../services/timeago";
 import notification_music from "../audios/notification.mp3";
+import { randomcolor } from "../services/randcolor";
 
 export default function Main() {
   const {
@@ -154,7 +155,7 @@ export default function Main() {
                   title="add this to conversation"
                 >
 
-                  <img
+                  {/* <img
                     data-target="chats"
                     data-value={contact.phone}
                     src={employees_icon_img}
@@ -163,7 +164,14 @@ export default function Main() {
                       contact?.phone?.replace("+", "_").toLowerCase()
                     }
                     alt="profile_pic"
-                  />
+                  /> */}
+                   <div
+                    data-target="chats"
+                    data-value={contact.phone}
+                    style={{background: randomcolor(3)}}
+                    className="user user_profile_pic"
+                    alt="profile_pic"
+                  >{contact.name.substr(0, 1)}</div>
                   <span className="space_between">
                     <span
                       className="contact_details"
@@ -266,7 +274,7 @@ export default function Main() {
                     data-target="contacts"
                     data-value={contact.phone}
                   >
-                    <img
+                    {/* <img
                       src={employees_icon_img}
                       className={
                         "user user_" +
@@ -275,7 +283,14 @@ export default function Main() {
                       alt="profile_pic"
                       data-target="contacts"
                       data-value={contact.phone}
-                    />
+                    /> */}
+                     <div
+                    data-target="contacts"
+                    data-value={contact.phone}
+                    style={{background: randomcolor(3)}}
+                    className="user user_profile_pic"
+                    alt="profile_pic"
+                  >{contact.name.substr(0, 1)}</div>
                     <span className="contact_details">
                       <h3 data-target="contacts" data-value={contact.phone}>
                         {contact.name?.substr(0, 10)}
@@ -500,11 +515,12 @@ export default function Main() {
                     className="cancel"
                     alt="profile_pic"
                   />
-                  <img
-                    src={employees_icon_img}
-                    className="user"
+                  <div
+                    // src={employees_icon_img}
+                    style={{background: randomcolor(3)}}
+                    className="user user_profile_pic"
                     alt="profile_pic"
-                  />
+                  >{selectedChat.name.substr(0, 1)}</div>
                   <div className="user_status">
                     <h3>{selectedChat.name.substr(0, 19)}</h3>
                     <span
@@ -525,6 +541,12 @@ export default function Main() {
                   </div>
                 </div>
                 <div className="selected_msgs">
+                  <div className="encrypted_wrapper">
+                  <p className="encrypted_msg">
+                    Gene Piki created this chat app as one time send message
+                    (we do not store any users infomation)
+                    </p>
+                  </div>
                   {selectedChat.msgs?.map((msg, index) => {
                     const lastMessage = selectedChat.msgs.length - 1 === index;
 
