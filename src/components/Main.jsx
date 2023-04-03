@@ -12,7 +12,6 @@ import {
 } from "../services/icons";
 import { getAppTimeAgo } from "../services/timeago";
 import notification_music from "../audios/notification.mp3";
-import { randomcolor } from "../services/randcolor";
 
 export default function Main() {
   const {
@@ -51,7 +50,8 @@ export default function Main() {
     userMessage,
     handleMsgChange,
     textRows,
-    copyMsg
+    copyMsg,
+    randomcolor,
   } = useContext(AppContext);
 
   var sidebar_main_profile = "";

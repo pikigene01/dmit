@@ -4,7 +4,7 @@
   --first-color-second: #ccc;
   --first-color-lighter: #666;
   --text-color: #888;
-  --body-color: #666;
+  --body-color: #f7f7f7f7;
   --blue-color: rgb(26, 26, 204);
   --body-font: "Poppins", sans-serif;
   --big-font-size: 2rem;
@@ -58,7 +58,7 @@
   color: var(--first-color);
   --first-color: #fff;
   --first-color-second: #160a0a;
-  --first-color-lighter: #0e0c0c;
+  --first-color-lighter: #f7f7f7;
   --text-color: #f2efef;
   --body-color: rgb(16, 14, 14);
 }
@@ -323,6 +323,7 @@ body {
   width: 50%;
   word-wrap: break-word;
   background: var(--body-color);
+  color: var(--first-color-lighter);
   border-radius: 10px 5px 0px 12px;
 }
 .fromMe:hover {
