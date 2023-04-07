@@ -519,6 +519,8 @@ function AppProvider({ children, socket }) {
   const startInsertMenu = (e) => {
     let positionX = e.clientX;
     let positionY = e.clientY;
+    let windowHeight = window.innerHeight;
+    let windowWidth = window.innerWidth;
 
     setMenuToDisplay({});
     if (e.target.getAttribute("data-target")) {
