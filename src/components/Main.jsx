@@ -52,6 +52,8 @@ export default function Main() {
     textRows,
     copyMsg,
     randomcolor,
+    tabChatsFunction,
+    setSelectedChatFalse,
   } = useContext(AppContext);
 
   var sidebar_main_profile = "";
@@ -106,7 +108,7 @@ export default function Main() {
     <div className="tabs">
       <span
         onClick={(e) =>
-          setTabActive({ ...tabActive, contacts: false, chats: true })
+          tabChatsFunction(e)
         }
         className={tabActive.chats ? "tab active" : "tab"}
       >
@@ -420,7 +422,7 @@ export default function Main() {
         {menuInserted}
         <div className="flex_end">
           <div>Gene Piki</div>
-          <div className="flex">
+          <div className="flex wide_screen_icon">
             <span
               onClick={() => setFullScreen(true)}
               className="fullmode icon"
@@ -510,7 +512,7 @@ export default function Main() {
                 <div className="selected_user">
                   <img
                     src={cancel_chat_icon}
-                    onClick={(e) => setSelectedChat({ chatOpen: false })}
+                    onClick={(e) => setSelectedChatFalse(e)}
                     style={{ marginRight: "10px", cursor: "pointer" }}
                     className="cancel"
                     alt="profile_pic"

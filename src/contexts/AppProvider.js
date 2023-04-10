@@ -10,12 +10,13 @@ import useLocalStorage from "../services/useLocalStorage";
 import swal from "sweetalert";
 import { testPatternPhone } from "../services/functions";
 import { getAppTimeAgo } from "../services/timeago";
+import { useNavigate } from "react-router-dom";
 
 const AppContext = createContext();
 
 function AppProvider({ children, socket }) {
   // const fileTypeAllowed = /image\/(png|jpg|jpeg)/i;
-
+  const navigate = useNavigate();
   const fileTypeAllowed = /(json)/i;
   const [file, setFile] = useState(null);
   const [appData, setAppData] = useState({
@@ -61,6 +62,7 @@ function AppProvider({ children, socket }) {
     name: "",
     phone: "",
   });
+  
   const handleChange = (e) => {
     setAppData({ ...appData, [e.target.name]: e.target.value });
     liveSearch(e);
@@ -133,8 +135,47 @@ function AppProvider({ children, socket }) {
         chatOpen: true,
         msgs: dataFindarray,
       });
+      navigate(`/${selectedChat.phone}`);
     }
+
   }, [selectedChat.chatOpen, selectedChat.name, messages]);
+
+  let url = window.location.pathname;
+
+  useEffect(()=>{
+    url = window.location.pathname;
+    let userName = "";
+
+    if(url.includes("+")){
+      const getNumber = url.split("+")[1];
+      const contactName = contacts.find((contact)=> contact.phone === `+${getNumber}`);
+
+
+      if(contactName){
+      userName = contactName?.name;
+      }else{
+      userName = `+${getNumber}`;
+      }
+      const contactObject = {phone: `+${getNumber}`,msgs:[],name: userName};
+      selectThisChat(contactObject);
+      return ()=>{};
+    }
+
+    switch(url){
+      case '/contacts':
+     setTabActive({contacts:true});
+      break;
+      case '/':
+     setTabActive({chats:true});
+      break;
+    }
+
+  },[url]);
+  useEffect(()=>{
+   if(tabActive.contacts){
+    navigate(`/contacts`);
+   }
+  },[tabActive.contacts])
 
   useEffect(() => {
     if (!file) return () => {};
@@ -853,6 +894,16 @@ function AppProvider({ children, socket }) {
     
 },[]);
 
+const tabChatsFunction = (e) =>{
+  setTabActive({ ...tabActive, contacts: false, chats: true });
+  navigate("/");
+}
+
+const setSelectedChatFalse = (e)=>{
+  setSelectedChat({ chatOpen: false });
+  navigate("/");
+}
+
   const values = {
     socket,
     user_id,
@@ -892,6 +943,8 @@ function AppProvider({ children, socket }) {
     textRows,
     copyMsg,
     randomcolor,
+    tabChatsFunction,
+    setSelectedChatFalse,
   };
   return <AppContext.Provider value={values}>{children}</AppContext.Provider>;
 }

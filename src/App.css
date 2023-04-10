@@ -480,6 +480,7 @@ input[value] {
   align-items: center;
   font-size: large;
   font-weight: bolder;
+  color: #f2efef;
 }
 @media screen and (max-width: 900px) {
   .sidebar.hide {
@@ -505,6 +506,9 @@ input[value] {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  .wide_screen_icon{
+    display: none;
   }
 
 }

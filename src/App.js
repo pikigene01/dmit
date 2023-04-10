@@ -32,14 +32,14 @@ function App() {
   }, []);
 
   return (
-    <AppProvider socket={socket}>
       <Router>
         <Routes>
-          <Route exact path="/" element={<WholeApp />} />
-          <Route exact path="*" element={<WholeApp />} />
+          <Route exact path="/" element={<WholeApp socket={socket} />} />
+          <Route exact path="/contacts" element={<WholeApp socket={socket} />} />
+          <Route exact path="/:phone" element={<WholeApp socket={socket} />} />
+          <Route exact path="*" element={<WholeApp socket={socket} />} />
         </Routes>
       </Router>
-    </AppProvider>
   );
 }
 
