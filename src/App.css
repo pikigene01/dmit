@@ -122,7 +122,7 @@ body {
 }
 .sidebar {
   display: block;
-  height: 90%;
+  height: 100%;
   width: 100%;
   border-right: 1px solid var(--text-color);
 }
@@ -201,7 +201,7 @@ body {
 }
 .tab_state_data {
   display: block;
-  height: 410px;
+  height: 66vh;
   width: 100%;
   overflow: hidden scroll;
 }
@@ -221,6 +221,7 @@ body {
   align-items: center;
 }
 .contact_wrapper {
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -497,6 +498,9 @@ input[value] {
   }
   .gridTwo {
     grid-template-columns: repeat(1, 1fr);
+  }
+  .tab_state_data{
+    height: 77vh;
   }
   .selected_msgs{
     height: 74vh;

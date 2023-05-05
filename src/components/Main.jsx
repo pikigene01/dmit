@@ -107,9 +107,7 @@ export default function Main() {
   sidebar_main_chat = (
     <div className="tabs">
       <span
-        onClick={(e) =>
-          tabChatsFunction(e)
-        }
+        onClick={(e) => tabChatsFunction(e)}
         className={tabActive.chats ? "tab active" : "tab"}
       >
         <img src={messages_icon_img} className="chats icon" alt="messages" />
@@ -156,7 +154,6 @@ export default function Main() {
                   onClick={(e) => selectThisChat(contact)}
                   title="add this to conversation"
                 >
-
                   {/* <img
                     data-target="chats"
                     data-value={contact.phone}
@@ -167,13 +164,15 @@ export default function Main() {
                     }
                     alt="profile_pic"
                   /> */}
-                   <div
+                  <div
                     data-target="chats"
                     data-value={contact.phone}
-                    style={{background: randomcolor(3)}}
+                    style={{ background: randomcolor(3) }}
                     className="user user_profile_pic"
                     alt="profile_pic"
-                  >{contact.name.substr(0, 1)}</div>
+                  >
+                    {contact.name.substr(0, 1)}
+                  </div>
                   <span className="space_between">
                     <span
                       className="contact_details"
@@ -286,13 +285,15 @@ export default function Main() {
                       data-target="contacts"
                       data-value={contact.phone}
                     /> */}
-                     <div
-                    data-target="contacts"
-                    data-value={contact.phone}
-                    style={{background: randomcolor(3)}}
-                    className="user user_profile_pic"
-                    alt="profile_pic"
-                  >{contact.name.substr(0, 1)}</div>
+                    <div
+                      data-target="contacts"
+                      data-value={contact.phone}
+                      style={{ background: randomcolor(3) }}
+                      className="user user_profile_pic"
+                      alt="profile_pic"
+                    >
+                      {contact.name.substr(0, 1)}
+                    </div>
                     <span className="contact_details">
                       <h3 data-target="contacts" data-value={contact.phone}>
                         {contact.name?.substr(0, 10)}
@@ -366,13 +367,13 @@ export default function Main() {
                 </span>
               </>
             )}
-             {menuToDisplay?.paste && (
+            {menuToDisplay?.paste && (
               <>
                 <span className="item" data-target="paste">
-                 Paste
+                  Paste
                 </span>
-                </>
-             )}
+              </>
+            )}
             {menuToDisplay?.chats && (
               <>
                 <span className="item" data-target="delete">
@@ -519,10 +520,12 @@ export default function Main() {
                   />
                   <div
                     // src={employees_icon_img}
-                    style={{background: randomcolor(3)}}
+                    style={{ background: randomcolor(3) }}
                     className="user user_profile_pic"
                     alt="profile_pic"
-                  >{selectedChat.name.substr(0, 1)}</div>
+                  >
+                    {selectedChat.name.substr(0, 1)}
+                  </div>
                   <div className="user_status">
                     <h3>{selectedChat.name.substr(0, 19)}</h3>
                     <span
@@ -541,12 +544,16 @@ export default function Main() {
                       }
                     ></span>
                   </div>
+
+                  <div className="call">
+                    
+                  </div>
                 </div>
                 <div className="selected_msgs">
                   <div className="encrypted_wrapper">
-                  <p className="encrypted_msg">
-                    Gene Piki created this chat app as one time send message
-                    (we do not store any users infomation)
+                    <p className="encrypted_msg">
+                      Gene Piki created this chat app as one time send message
+                      (we do not store any users infomation)
                     </p>
                   </div>
                   {selectedChat.msgs?.map((msg, index) => {
