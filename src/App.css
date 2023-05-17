@@ -109,7 +109,7 @@ body {
 .gridTwo {
   display: grid;
   width: 100%;
-  height: 100%;
+  height: auto;
   grid-template-columns: repeat(2, 1fr);
   gap: 15px;
 }
@@ -122,8 +122,8 @@ body {
 }
 .sidebar {
   display: block;
-  height: 100%;
   width: 100%;
+  height: auto;
   border-right: 1px solid var(--text-color);
 }
 .search_head {
@@ -201,8 +201,10 @@ body {
 }
 .tab_state_data {
   display: block;
-  height: 66vh;
+  flex-direction: column;
+  flex-grow: 1;
   width: 100%;
+  height: 400px;
   overflow: hidden scroll;
 }
 .user {
@@ -501,11 +503,12 @@ input[value] {
   }
   .tab_state_data{
     height: 77vh;
+    overflow: hidden scroll;
   }
-  .selected_msgs{
+  /* .selected_msgs{
     height: 74vh;
     border-bottom: 1px solid var(--body-color);
-  }
+  } */
   .selected_msgs_input_send{
     position: fixed;
     bottom: 5px;

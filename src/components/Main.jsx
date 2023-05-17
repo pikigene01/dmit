@@ -412,7 +412,8 @@ export default function Main() {
         src={notification_music}
       />
       <div className="main_app">
-        <input
+     <div>
+     <input
           className="input is-hidden jsonFileInput"
           id="jsonFileInput"
           accept=".json"
@@ -434,6 +435,7 @@ export default function Main() {
             ></span>
           </div>
         </div>
+     </div>
         <div className="gridTwo">
           <div className={selectedChat.chatOpen ? "sidebar hide" : "sidebar"}>
             <div className="search_head">
