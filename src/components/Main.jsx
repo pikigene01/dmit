@@ -12,6 +12,7 @@ import {
 } from "../services/icons";
 import { getAppTimeAgo } from "../services/timeago";
 import notification_music from "../audios/notification.mp3";
+import {Call, Phone, VideoCall, VoiceChat} from '@material-ui/icons'
 
 export default function Main() {
   const {
@@ -54,6 +55,8 @@ export default function Main() {
     randomcolor,
     tabChatsFunction,
     setSelectedChatFalse,
+    isCalling,
+    callUser,
   } = useContext(AppContext);
 
   var sidebar_main_profile = "";
@@ -405,14 +408,14 @@ export default function Main() {
 
   return (
     <>
+      <div className="main_app">
+     <div>
       <audio
         style={{ display: "none" }}
         id="notification_audio"
         className="notification_audio"
         src={notification_music}
       />
-      <div className="main_app">
-     <div>
      <input
           className="input is-hidden jsonFileInput"
           id="jsonFileInput"
@@ -547,10 +550,19 @@ export default function Main() {
                     ></span>
                   </div>
 
-                  <div className="call">
-                    
+                  <div className="call" style={{display:'flex',justifyContent: 'end',width:'40%',cursor:'pointer'}}>
+                    <VoiceChat onClick={(e)=> callUser(selectedChat?.phone)} />
                   </div>
                 </div>
+                 {isCalling && (
+                <div className="call_left_side" style={{width:"100%", height:"100%",display:"block", background:"GREEN"}}>
+                      Call Or Video Chat
+                </div>
+
+                 )}
+                 {!isCalling && (
+
+                <div className="msg_left_app">
                 <div className="selected_msgs">
                   <div className="encrypted_wrapper">
                     <p className="encrypted_msg">
@@ -624,6 +636,8 @@ export default function Main() {
                     </button>
                   </div>
                 </form>
+                </div>
+                 )}
               </>
             )}
             {!selectedChat.chatOpen && (

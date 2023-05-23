@@ -26,6 +26,7 @@ function AppProvider({ children, socket }) {
     reply: false,
   });
   const [me, setMe] = useState();
+  const [isCalling, setIsCalling] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
   const setRefLast = useCallback((node) => {
     if (node) {
@@ -63,7 +64,7 @@ function AppProvider({ children, socket }) {
     name: "",
     phone: "",
   });
-  
+
   const handleChange = (e) => {
     setAppData({ ...appData, [e.target.name]: e.target.value });
     liveSearch(e);
@@ -79,7 +80,7 @@ function AppProvider({ children, socket }) {
     let eventLength = e.target.value.length;
     var getRows = Math.ceil(eventLength / 67);
     if (getRows >= 0) {
-      if(getRows >= 6) return ()=>{}
+      if (getRows >= 6) return () => {};
       setTextRows((prevData) => {
         return (prevData = getRows);
       });
@@ -87,7 +88,7 @@ function AppProvider({ children, socket }) {
     // if((textAreavalue / 67) >= 1){
     //   setTextRows(prevData=>{
     //     return prevData += 1;
-    //   }); 
+    //   });
     //   setTextAreavalue(0);
     // }
   };
@@ -138,45 +139,48 @@ function AppProvider({ children, socket }) {
       });
       navigate(`/${selectedChat.phone}`);
     }
-
   }, [selectedChat.chatOpen, selectedChat.name, messages]);
 
   let url = window.location.pathname;
 
-  useEffect(()=>{
+  useEffect(() => {
     url = window.location.pathname;
     let userName = "";
 
-    if(url.includes("+")){
+    if (url.includes("+")) {
       const getNumber = url.split("+")[1];
-      const contactName = contacts.find((contact)=> contact.phone === `+${getNumber}`);
+      const contactName = contacts.find(
+        (contact) => contact.phone === `+${getNumber}`
+      );
 
-
-      if(contactName){
-      userName = contactName?.name;
-      }else{
-      userName = `+${getNumber}`;
+      if (contactName) {
+        userName = contactName?.name;
+      } else {
+        userName = `+${getNumber}`;
       }
-      const contactObject = {phone: `+${getNumber}`,msgs:[],name: userName};
+      const contactObject = {
+        phone: `+${getNumber}`,
+        msgs: [],
+        name: userName,
+      };
       selectThisChat(contactObject);
-      return ()=>{};
+      return () => {};
     }
 
-    switch(url){
-      case '/contacts':
-     setTabActive({contacts:true});
-      break;
-      case '/':
-     setTabActive({chats:true});
-      break;
+    switch (url) {
+      case "/contacts":
+        setTabActive({ contacts: true });
+        break;
+      case "/":
+        setTabActive({ chats: true });
+        break;
     }
-
-  },[url]);
-  useEffect(()=>{
-   if(tabActive.contacts){
-    navigate(`/contacts`);
-   }
-  },[tabActive.contacts])
+  }, [url]);
+  useEffect(() => {
+    if (tabActive.contacts) {
+      navigate(`/contacts`);
+    }
+  }, [tabActive.contacts]);
 
   useEffect(() => {
     if (!file) return () => {};
@@ -247,6 +251,9 @@ function AppProvider({ children, socket }) {
       }
     });
     return dataFindarray.length;
+  };
+  const callUser = (phone) => {
+    setIsCalling(!isCalling);
   };
 
   useEffect(() => {
@@ -568,14 +575,14 @@ function AppProvider({ children, socket }) {
     if (e.target.getAttribute("data-target")) {
       var toView = e.target.getAttribute("data-target"),
         value = e.target.getAttribute("data-value");
-        // alert(e.target.innerHTML)
+      // alert(e.target.innerHTML)
 
       switch (toView) {
         case "msg":
           setMenuToDisplay({
             msg: true,
             value,
-            event:e,
+            event: e,
           });
           break;
         case "file":
@@ -595,7 +602,7 @@ function AppProvider({ children, socket }) {
           setMenuToDisplay({
             paste: true,
             value,
-            event:e,
+            event: e,
           });
 
           break;
@@ -677,12 +684,12 @@ function AppProvider({ children, socket }) {
           break;
         case "copy":
           hideMenu();
-          
+
           document.querySelectorAll(".send_msg_input").forEach((input) => {
             //do some action on send message input
-            if(menuToDisplay?.event){
+            if (menuToDisplay?.event) {
               let eventInnerText = menuToDisplay?.event.target.innerHTML;
-              setUserMessage(prevData=>{
+              setUserMessage((prevData) => {
                 return `${prevData} ${eventInnerText}`;
               });
               input.select();
@@ -725,13 +732,13 @@ function AppProvider({ children, socket }) {
         case "paste":
           hideMenu();
 
-          setUserMessage(prevData=>{
+          setUserMessage((prevData) => {
             return `${prevData} ${copyMsg}`;
           });
 
           setTimeout(async () => {
             const text = await navigator.clipboard.readText();
-            if(menuToDisplay.event){
+            if (menuToDisplay.event) {
               menuToDisplay.event.target.value = text;
             }
           }, 1000);
@@ -742,17 +749,16 @@ function AppProvider({ children, socket }) {
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     document.querySelectorAll(".send_msg_input").forEach((input) => {
       //do some action on send message input
-      
-        input.addEventListener('contextmenu',(e)=>{
-          e.preventDefault();
-          startInsertMenu(e);
 
+      input.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        startInsertMenu(e);
       });
     });
-  },[selectThisChat]);
+  }, [selectThisChat]);
   useEffect(() => {
     const menu_items = document.querySelectorAll(".item");
     menu_items.forEach((item) => {
@@ -880,15 +886,15 @@ function AppProvider({ children, socket }) {
       ring?.play();
     });
   };
-const tabChatsFunction = (e) =>{
-  setTabActive({ ...tabActive, contacts: false, chats: true });
-  navigate("/");
-}
+  const tabChatsFunction = (e) => {
+    setTabActive({ ...tabActive, contacts: false, chats: true });
+    navigate("/");
+  };
 
-const setSelectedChatFalse = (e)=>{
-  setSelectedChat({ chatOpen: false });
-  navigate("/");
-}
+  const setSelectedChatFalse = (e) => {
+    setSelectedChat({ chatOpen: false });
+    navigate("/");
+  };
 
   const values = {
     socket,
@@ -931,6 +937,8 @@ const setSelectedChatFalse = (e)=>{
     randomcolor,
     tabChatsFunction,
     setSelectedChatFalse,
+    isCalling,
+    callUser,
   };
   return <AppContext.Provider value={values}>{children}</AppContext.Provider>;
 }
