@@ -1,4 +1,17 @@
 :root {
+  --gray: #64748b;
+  --gray-l-1: #748297;
+  --gray-l-2: #8390a3;
+  --gray-l-3: #a2acba;
+  --gray-l-4: #c1c8d1;
+  --gray-l-5: #e0e4e8;
+  --gray-l-6: #f0f2f4;
+  --gray-d-1: #5a697e;
+  --gray-d-2: #505d70;
+  --gray-d-3: #3c4654;
+  --gray-d-4: #282f38;
+  --gray-d-5: #14181c;
+  --gray-d-6: #0a0c0e;
   --header-height: 3rem;
   --first-color: #fff;
   --first-color-second: #ccc;
@@ -98,7 +111,8 @@ body {
   position: fixed;
   width: 100vw;
   height: 100vh;
-  background-color: var(--first-color-second);
+  /* background-color: var(--first-color-second); */
+  background: var(--gray-l-5);
   border-radius: 10px 0px 0px 5px;
   padding: 10px;
 }

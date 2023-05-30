@@ -550,7 +550,7 @@ export default function Main() {
                     ></span>
                   </div>
 
-                  <div className="call" style={{display:'flex',justifyContent: 'end',width:'40%',cursor:'pointer'}}>
+                  <div className="call" style={{display:'flex',justifyContent: 'end',width:'100%',cursor:'pointer'}}>
                     <VoiceChat onClick={(e)=> callUser(selectedChat?.phone)} />
                   </div>
                 </div>
